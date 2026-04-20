@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeliculaApp — Gestão de Clientes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --primary: #0369A1;
+      --primary-hover: #0284C7;
+      --sidebar-bg: #0F172A;
+    }
+    * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+    html { font-size: 16px; }
+
+    /* Sidebar */
+    #sidebar {
+      position: fixed; top: 0; left: 0; height: 100%; width: 256px; z-index: 40;
+      display: flex; flex-direction: column;
+      background-color: var(--sidebar-bg);
+      transform: translateX(-100%);
+      transition: transform 250ms cubic-bezier(0.4,0,0.2,1);
+    }
+    #sidebar.open { transform: translateX(0); }
+
+    /* On md+ always show sidebar */
+    @media (min-width: 768px) {
+      #sidebar { transform: translateX(0) !important; z-index: 20; }
+      #main-content { margin-left: 256px; }
+      #mobile-topbar { display: none; }
+      #mobile-overlay { display: none !important; }
+    }
+
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px;
+      width: 100%; padding: 10px 12px; border-radius: 8px;
+      color: #94A3B8; font-size: 14px; font-weight: 500;
+      cursor: pointer; text-align: left; background: none; border: none;
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+    .sidebar-link:hover { background-color: rgba(255,255,255,0.07); color: #CBD5E1; }
+    .sidebar-link.active { background-color: rgba(3,105,161,0.3); color: #38BDF8; }
+    .sidebar-link.active svg { color: #38BDF8; }
+
+    /* Overlay */
+    #mobile-overlay {
+      display: none; position: fixed; inset: 0; z-index: 30;
+      background: rgba(0,0,0,0.5);
+    }
+    #mobile-overlay.show { display: block; }
+
+    /* Auth gate */
+    #auth-gate  { display: flex; }
+    #app-container { display: none; }
+
+    /* Pages */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--primary); color: white;
+      transition: background-color 150ms ease, transform 100ms ease;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background-color: var(--primary-hover); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* Cards */
+    .card { transition: box-shadow 200ms ease; }
+    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+    /* Timeline connector */
+    .timeline-item::before {
+      content: ''; position: absolute;
+      left: 19px; top: 44px; bottom: -20px;
+      width: 2px; background: #E2E8F0;
+    }
+    .timeline-item:last-child::before { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0ms !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+
+<!-- ══════════════════════════════════════════
+     AUTH GATE — TELA DE LOGIN
+══════════════════════════════════════════ -->
+<div id="auth-gate" style="min-height:100vh;background:linear-gradient(135deg,#0F172A 0%,#1E3A5F 100%);align-items:center;justify-content:center;padding:16px;">
+  <div style="width:100%;max-width:400px;">
+
+    <!-- Logo card -->
+    <div style="text-align:center;margin-bottom:32px;">
+      <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:16px;background:#0369A1;margin-bottom:16px;">
+        <svg style="width:28px;height:28px;color:white;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </div>
+      <h1 style="color:white;font-size:22px;font-weight:700;margin:0 0 4px;">PeliculaApp</h1>
+      <p style="color:#94A3B8;font-size:14px;margin:0;">Acesso restrito a funcionários</p>
+    </div>
+
+    <!-- Login form -->
+    <div style="background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
+      <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 24px;">Entrar na sua conta</h2>
+
+      <div id="login-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#DC2626;"></div>
+
+      <form onsubmit="handleLogin(event)" style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <label for="login-email" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
+          <input id="login-email" type="email" required autocomplete="email"
+            placeholder="seu@email.com"
+            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+        <div>
+          <label for="login-password" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Senha</label>
+          <div style="position:relative;">
+            <input id="login-password" type="password" required autocomplete="current-password"
+              placeholder="••••••••"
+              style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;padding-right:44px;"
+              onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            <button type="button" onclick="togglePassword()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94A3B8;" aria-label="Mostrar senha">
+              <svg id="eye-icon" style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" id="login-btn"
+          style="width:100%;padding:12px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:background-color 150ms ease;"
+          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+          </svg>
+          Entrar
+        </button>
+      </form>
+    </div>
+
+    <p style="text-align:center;color:#475569;font-size:12px;margin-top:20px;">
+      Problemas de acesso? Contate o administrador.
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP CONTAINER (visível após login)
+══════════════════════════════════════════ -->
+<div id="app-container">
+
+<!-- ══════════════════════════════════════════
+     MOBILE TOP BAR
+══════════════════════════════════════════ -->
+<div id="mobile-topbar" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 flex items-center justify-between px-4 h-14">
+  <button id="hamburger" aria-label="Abrir menu" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 cursor-pointer">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+  <span class="font-semibold text-slate-800 text-sm">PeliculaApp</span>
+  <div class="w-9"></div>
+</div>
+
+<!-- OVERLAY -->
+<div id="mobile-overlay"></div>
+
+<!-- ══════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════ -->
+<aside id="sidebar" aria-label="Navegação">
+  <!-- Logo -->
+  <div style="display:flex;align-items:center;gap:12px;padding:0 20px;height:64px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;">
+    <div style="width:32px;height:32px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg style="width:18px;height:18px;color:white;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+    </div>
+    <div>
+      <p style="color:white;font-weight:600;font-size:14px;line-height:1.2;">PeliculaApp</p>
+      <p style="color:#64748B;font-size:11px;">Gestão de Clientes</p>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav style="flex:1;padding:16px 12px;overflow-y:auto;">
+    <p style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:0 12px;margin-bottom:8px;">Menu</p>
+
+    <button onclick="navigate('dashboard')" data-page="dashboard" class="sidebar-link active">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+      </svg>
+      Dashboard
+    </button>
+
+    <button onclick="navigate('busca')" data-page="busca" class="sidebar-link" style="margin-top:4px;">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      Busca de Clientes
+    </button>
+
+    <button onclick="navigate('tipos')" data-page="tipos" class="sidebar-link" style="margin-top:4px;">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"/>
+      </svg>
+      Tipos de Película
+    </button>
+  </nav>
+
+  <!-- User -->
+  <div style="padding:12px;border-top:1px solid rgba(255,255,255,0.1);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+        <div style="width:32px;height:32px;border-radius:50%;background:rgba(3,105,161,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="color:#7DD3FC;font-size:11px;font-weight:700;">RF</span>
+        </div>
+        <div style="min-width:0;">
+          <p style="color:white;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Rafael Fontes</p>
+          <p style="color:#64748B;font-size:11px;">Atendente</p>
+        </div>
+      </div>
+      <button onclick="handleLogout()" aria-label="Sair" style="padding:6px;border-radius:6px;background:none;border:none;color:#64748B;cursor:pointer;" onmouseenter="this.style.color='#F87171'" onmouseleave="this.style.color='#64748B'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════ -->
+<main id="main-content" style="min-height:100vh;">
+  <div style="padding-top:56px;" id="page-top-pad">
+
+    <!-- ═══════════════════════════════════
+         PAGE: DASHBOARD
+    ═══════════════════════════════════ -->
+    <div id="page-dashboard" class="page active">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-semibold text-slate-800">Dashboard</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Visão geral das instalações</p>
+          </div>
+          <button onclick="navigate('novo-cliente')"
+            class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            <span class="hidden sm:inline">Novo Cliente</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 space-y-6">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="card bg-white rounded-xl border border-slate-200 p-5">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Clientes</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">248</p>
+                <p class="text-xs text-emerald-600 mt-1 font-medium">+12 este mês</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Instalações / Mês</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">34</p>
+                <p class="text-xs text-emerald-600 mt-1 font-medium">+8 vs. anterior</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Películas Ativas</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">187</p>
+                <p class="text-xs text-slate-400 mt-1">na garantia</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Garantias a Vencer</p>
+                <p class="text-3xl font-bold text-amber-500 mt-1">9</p>
+                <p class="text-xs text-amber-600 mt-1 font-medium">próximos 30 dias</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table + Expiring -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div class="xl:col-span-2 bg-white rounded-xl border border-slate-200">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h2 class="font-semibold text-slate-800 text-sm">Instalações Recentes</h2>
+              <span class="text-xs text-slate-400">Últimas 5</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-slate-100">
+                    <th class="text-left text-xs font-medium text-slate-500 px-5 py-3 uppercase tracking-wider">Cliente</th>
+                    <th class="text-left text-xs font-medium text-slate-500 px-4 py-3 uppercase tracking-wider hidden sm:table-cell">Veículo</th>
+                    <th class="text-left text-xs font-medium text-slate-500 px-4 py-3 uppercase tracking-wider hidden lg:table-cell">Tipo</th>
+                    <th class="text-left text-xs font-medium text-slate-500 px-4 py-3 uppercase tracking-wider">Data</th>
+                    <th class="text-left text-xs font-medium text-slate-500 px-4 py-3 uppercase tracking-wider">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="navigate('veiculo')">
+                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">João Silva</p><p class="text-xs text-slate-400">123.456.789-00</p></td>
+                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Corolla 2021</p><p class="text-xs text-slate-400">ABC-1234</p></td>
+                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Insulfilm G20</td>
+                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">12/04/2026</td>
+                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativa</span></td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="navigate('veiculo')">
+                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Maria Santos</p><p class="text-xs text-slate-400">987.654.321-00</p></td>
+                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Civic 2022</p><p class="text-xs text-slate-400">XYZ-5678</p></td>
+                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Nano Cerâmica Llumar</td>
+                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">10/04/2026</td>
+                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativa</span></td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
+                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Carlos Oliveira</p><p class="text-xs text-slate-400">456.123.789-00</p></td>
+                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Polo 2020</p><p class="text-xs text-slate-400">DEF-9012</p></td>
+                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Película Solar 3M</td>
+                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">07/04/2026</td>
+                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">A Vencer</span></td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
+                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Ana Pereira</p><p class="text-xs text-slate-400">321.654.987-00</p></td>
+                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">HB20 2023</p><p class="text-xs text-slate-400">GHI-3456</p></td>
+                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Insulfilm G35</td>
+                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">03/04/2026</td>
+                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativa</span></td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
+                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Roberto Lima</p><p class="text-xs text-slate-400">654.321.987-00</p></td>
+                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Onix 2021</p><p class="text-xs text-slate-400">JKL-7890</p></td>
+                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Película de Segurança</td>
+                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">28/03/2026</td>
+                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">Expirada</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
+              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+              </svg>
+              <h2 class="font-semibold text-slate-800 text-sm">Garantias a Vencer</h2>
+            </div>
+            <div class="divide-y divide-slate-50">
+              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Carlos Oliveira</p><p class="text-xs text-slate-500">Polo 2020 · DEF-9012</p></div>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex-shrink-0">7 dias</span>
+                </div>
+              </div>
+              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Fernanda Costa</p><p class="text-xs text-slate-500">Argo 2022 · MNO-1234</p></div>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex-shrink-0">14 dias</span>
+                </div>
+              </div>
+              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Paulo Mendes</p><p class="text-xs text-slate-500">Sandero 2019 · PQR-5678</p></div>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex-shrink-0">21 dias</span>
+                </div>
+              </div>
+              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Juliana Freitas</p><p class="text-xs text-slate-500">Tracker 2023 · STU-9012</p></div>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 flex-shrink-0">28 dias</span>
+                </div>
+              </div>
+              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Marcos Rodrigues</p><p class="text-xs text-slate-500">Virtus 2021 · VWX-3456</p></div>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 flex-shrink-0">30 dias</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PAGE: BUSCA POR CPF
+    ═══════════════════════════════════ -->
+    <div id="page-busca" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div>
+            <h1 class="text-xl font-semibold text-slate-800">Busca de Clientes</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Localize ou cadastre um cliente</p>
+          </div>
+          <button onclick="navigate('novo-cliente')"
+            class="btn-primary px-4 py-2 rounded-lg text-sm font-semibold inline-flex items-center gap-2 flex-shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            Novo Cliente
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <!-- Search -->
+        <div class="max-w-lg mx-auto">
+          <label for="cpf-input" class="block text-sm font-medium text-slate-700 mb-2">CPF do Cliente</label>
+          <div class="flex gap-3">
+            <div class="relative flex-1">
+              <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/>
+                </svg>
+              </div>
+              <input id="cpf-input" type="text" placeholder="000.000.000-00"
+                class="w-full pl-9 pr-4 py-3 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 text-sm"
+                maxlength="14" oninput="formatCPF(this)" />
+            </div>
+            <button onclick="searchByCPF()"
+              class="btn-primary px-5 py-3 rounded-xl text-sm font-semibold inline-flex items-center gap-2 flex-shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              Buscar
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">Digite os 11 dígitos do CPF para localizar o cliente</p>
+        </div>
+
+        <!-- Loading -->
+        <div id="search-loading" class="mt-10 hidden">
+          <div class="flex items-center justify-center gap-3 text-slate-500 text-sm">
+            <svg class="w-5 h-5 animate-spin text-blue-600" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            Buscando cliente...
+          </div>
+        </div>
+
+        <!-- Result: found (conteúdo renderizado via JS) -->
+        <div id="search-result" class="mt-8 hidden">
+          <div class="max-w-2xl mx-auto">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                </svg>
+              </div>
+              <p class="text-sm font-medium text-emerald-700">Cliente encontrado</p>
+            </div>
+            <!-- card renderizado dinamicamente -->
+            <div id="client-result-card" class="bg-white rounded-xl border border-slate-200 overflow-hidden"></div>
+            <h4 class="text-sm font-semibold text-slate-700 mt-5 mb-3">Veículos cadastrados</h4>
+            <div id="search-vehicles-list" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- Result: not found -->
+        <div id="not-found" class="mt-8 hidden">
+          <div class="max-w-md mx-auto text-center">
+            <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+              </svg>
+            </div>
+            <p class="text-slate-700 font-semibold mb-1">Nenhum cliente encontrado</p>
+            <p class="text-sm text-slate-400 mb-6">CPF não está cadastrado no sistema</p>
+            <button onclick="navigate('novo-cliente')"
+              class="btn-primary px-5 py-2.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2 mx-auto">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+              </svg>
+              Cadastrar novo cliente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PAGE: NOVO CLIENTE
+    ═══════════════════════════════════ -->
+    <div id="page-novo-cliente" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center gap-3">
+          <button onclick="navigate('busca')" aria-label="Voltar" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+          </button>
+          <div>
+            <h1 class="text-xl font-semibold text-slate-800">Novo Cliente</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Preencha os dados para cadastrar</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <div class="max-w-3xl">
+          <form onsubmit="handleNewClientSubmit(event)" class="space-y-5">
+
+            <!-- Dados pessoais -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div class="px-5 py-3.5 border-b border-slate-100">
+                <h2 class="text-sm font-semibold text-slate-700">Dados Pessoais</h2>
+              </div>
+              <div class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div class="sm:col-span-2">
+                  <label for="nc-nome" class="block text-sm font-medium text-slate-700 mb-1.5">Nome completo <span class="text-red-500">*</span></label>
+                  <input id="nc-nome" type="text" required placeholder="Ex.: João Carlos Silva"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-cpf" class="block text-sm font-medium text-slate-700 mb-1.5">CPF <span class="text-red-500">*</span></label>
+                  <input id="nc-cpf" type="text" required placeholder="000.000.000-00" maxlength="14"
+                    oninput="formatCPF(this)"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-nasc" class="block text-sm font-medium text-slate-700 mb-1.5">Data de nascimento</label>
+                  <input id="nc-nasc" type="date"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-tel" class="block text-sm font-medium text-slate-700 mb-1.5">Telefone / WhatsApp <span class="text-red-500">*</span></label>
+                  <input id="nc-tel" type="tel" required placeholder="(11) 99999-9999" maxlength="15"
+                    oninput="formatPhone(this)"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-email" class="block text-sm font-medium text-slate-700 mb-1.5">E-mail</label>
+                  <input id="nc-email" type="email" placeholder="joao@email.com"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-slate-700">Endereço</h2>
+                <span class="text-xs text-slate-400">Opcional</span>
+              </div>
+              <div class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div class="sm:col-span-2">
+                  <label for="nc-cep" class="block text-sm font-medium text-slate-700 mb-1.5">CEP</label>
+                  <div class="flex gap-2">
+                    <input id="nc-cep" type="text" placeholder="00000-000" maxlength="9"
+                      oninput="formatCEP(this)"
+                      class="w-40 px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    <button type="button" onclick="simulateCEP()"
+                      class="px-3 py-2.5 border border-slate-300 rounded-xl text-slate-600 text-sm hover:bg-slate-50 cursor-pointer transition-colors inline-flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                      </svg>
+                      Buscar
+                    </button>
+                    <span class="text-xs text-slate-400 self-center">Preenchimento automático via ViaCEP</span>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="nc-rua" class="block text-sm font-medium text-slate-700 mb-1.5">Rua / Logradouro</label>
+                  <input id="nc-rua" type="text" placeholder="Rua das Acácias"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-num" class="block text-sm font-medium text-slate-700 mb-1.5">Número</label>
+                  <input id="nc-num" type="text" placeholder="123"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-comp" class="block text-sm font-medium text-slate-700 mb-1.5">Complemento</label>
+                  <input id="nc-comp" type="text" placeholder="Apto 42, Bloco B"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-bairro" class="block text-sm font-medium text-slate-700 mb-1.5">Bairro</label>
+                  <input id="nc-bairro" type="text" placeholder="Vila Madalena"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nc-cidade" class="block text-sm font-medium text-slate-700 mb-1.5">Cidade</label>
+                  <input id="nc-cidade" type="text" placeholder="São Paulo"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="nc-estado" class="block text-sm font-medium text-slate-700 mb-1.5">Estado (UF)</label>
+                  <select id="nc-estado"
+                    class="w-32 px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500 bg-white cursor-pointer">
+                    <option value="">UF</option>
+                    <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option>
+                    <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
+                    <option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option>
+                    <option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                    <option>RS</option><option>RO</option><option>RR</option><option>SC</option><option selected>SP</option>
+                    <option>SE</option><option>TO</option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Observações -->
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div class="px-5 py-3.5 border-b border-slate-100">
+                <h2 class="text-sm font-semibold text-slate-700">Observações</h2>
+              </div>
+              <div class="px-5 py-5">
+                <textarea rows="3" placeholder="Informações adicionais sobre o cliente..."
+                  class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 resize-none"></textarea>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-between gap-3 pb-6">
+              <button type="button" onclick="navigate('busca')"
+                class="px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 cursor-pointer border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" id="new-client-btn"
+                class="btn-primary px-6 py-2.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+                </svg>
+                Cadastrar Cliente
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PAGE: PERFIL DO CLIENTE
+    ═══════════════════════════════════ -->
+    <div id="page-perfil" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <button onclick="navigate('busca')" aria-label="Voltar" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+              </svg>
+            </button>
+            <div>
+              <h1 id="profile-name" class="text-xl font-semibold text-slate-800">—</h1>
+              <p id="profile-cpf" class="text-xs text-slate-500">CPF: —</p>
+            </div>
+          </div>
+          <button class="btn-primary px-4 py-2 rounded-lg text-sm font-medium hidden sm:inline-flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
+            </svg>
+            Editar
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200">
+          <div class="px-5 py-3.5 border-b border-slate-100"><h2 class="text-sm font-semibold text-slate-700">Dados Pessoais</h2></div>
+          <div id="profile-client-data" class="px-5 py-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm"></div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-semibold text-slate-800">Veículos <span id="profile-vehicles-count" class="text-slate-400 font-normal text-sm">(0)</span></h2>
+            <button onclick="navigate('novo-veiculo')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              Novo Veículo
+            </button>
+          </div>
+          <div id="profile-vehicles-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PAGE: VEÍCULO + HISTÓRICO
+    ═══════════════════════════════════ -->
+    <div id="page-veiculo" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <button onclick="navigate('perfil')" aria-label="Voltar" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <div>
+              <h1 id="veiculo-title" class="text-xl font-semibold text-slate-800">—</h1>
+              <p id="veiculo-subtitle" class="text-xs text-slate-500">—</p>
+            </div>
+          </div>
+          <button onclick="navigate('nova-instalacao')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            <span class="hidden sm:inline">Nova Instalação</span>
+            <span class="sm:hidden">Novo</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200">
+          <div class="px-5 py-3.5 border-b border-slate-100"><h2 class="text-sm font-semibold text-slate-700">Dados do Veículo</h2></div>
+          <div id="vehicle-data-grid" class="px-5 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm"></div>
+        </div>
+
+        <div>
+          <h2 class="text-base font-semibold text-slate-800 mb-4">Histórico de Instalações</h2>
+          <div id="vehicle-timeline" class="space-y-5"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PAGE: NOVA INSTALAÇÃO
+    ═══════════════════════════════════ -->
+    <div id="page-nova-instalacao" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center gap-3">
+          <button onclick="navigate('veiculo')" aria-label="Voltar" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+          </button>
+          <div>
+            <h1 class="text-xl font-semibold text-slate-800">Nova Instalação</h1>
+            <p id="nova-inst-subtitle" class="text-xs text-slate-500">—</p>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <div class="max-w-2xl">
+          <form class="bg-white rounded-xl border border-slate-200 overflow-hidden" onsubmit="handleFormSubmit(event)">
+            <div class="px-5 py-4 border-b border-slate-100"><h2 class="text-sm font-semibold text-slate-700">Dados da Instalação</h2></div>
+            <div class="px-5 py-5 space-y-5">
+              <div>
+                <label for="film-type" class="block text-sm font-medium text-slate-700 mb-1.5">Tipo de Película <span class="text-red-500">*</span></label>
+                <select id="film-type" required class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500 bg-white cursor-pointer">
+                  <option value="" disabled selected>Carregando tipos...</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="install-date" class="block text-sm font-medium text-slate-700 mb-1.5">Data da Instalação <span class="text-red-500">*</span></label>
+                  <input type="date" id="install-date" value="2026-04-20" required class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+                <div>
+                  <label for="warranty" class="block text-sm font-medium text-slate-700 mb-1.5">Garantia (meses)</label>
+                  <input type="number" id="warranty" value="12" min="1" max="60" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-3">Vidros Cobertos <span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-blue-300 transition-colors"><input type="checkbox" checked class="w-4 h-4 accent-blue-600" /><span class="text-sm text-slate-700">Parabrisa</span></label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-blue-300 transition-colors"><input type="checkbox" checked class="w-4 h-4 accent-blue-600" /><span class="text-sm text-slate-700">Traseiro</span></label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-blue-300 transition-colors"><input type="checkbox" checked class="w-4 h-4 accent-blue-600" /><span class="text-sm text-slate-700">Lat. Dianteiro Esq.</span></label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-blue-300 transition-colors"><input type="checkbox" checked class="w-4 h-4 accent-blue-600" /><span class="text-sm text-slate-700">Lat. Dianteiro Dir.</span></label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-blue-300 transition-colors"><input type="checkbox" class="w-4 h-4 accent-blue-600" /><span class="text-sm text-slate-700">Lat. Traseiro Esq.</span></label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-blue-300 transition-colors"><input type="checkbox" class="w-4 h-4 accent-blue-600" /><span class="text-sm text-slate-700">Lat. Traseiro Dir.</span></label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-blue-300 transition-colors col-span-2"><input type="checkbox" class="w-4 h-4 accent-blue-600" /><span class="text-sm text-slate-700">Teto Solar</span></label>
+                </div>
+              </div>
+              <div>
+                <label for="notes" class="block text-sm font-medium text-slate-700 mb-1.5">Observações</label>
+                <textarea id="notes" rows="3" placeholder="Ex.: cliente solicitou película com menor escurecimento no parabrisa..." class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 resize-none"></textarea>
+              </div>
+            </div>
+            <div class="px-5 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-3">
+              <button type="button" onclick="navigate('veiculo')" class="px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 cursor-pointer">Cancelar</button>
+              <button type="submit" id="submit-btn" class="btn-primary px-6 py-2.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Registrar Instalação
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PAGE: TIPOS DE PELÍCULA
+    ═══════════════════════════════════ -->
+    <div id="page-tipos" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <div><h1 class="text-xl font-semibold text-slate-800">Tipos de Película</h1><p class="text-sm text-slate-500 mt-0.5">Catálogo de películas disponíveis</p></div>
+          <button class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            Novo Tipo
+          </button>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Insulfilm G20</p><p class="text-xs text-slate-500 mt-0.5">Solar · Johnson</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Escurecimento 20% · Rejeição solar básica</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">12 meses</strong></p></div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Insulfilm G35</p><p class="text-xs text-slate-500 mt-0.5">Solar · Johnson</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Escurecimento 35% · Rejeição solar básica</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">12 meses</strong></p></div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Película Solar 3M</p><p class="text-xs text-slate-500 mt-0.5">Solar Premium · 3M</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Alta rejeição de calor · Baixa reflexão</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">24 meses</strong></p></div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Nano Cerâmica Llumar</p><p class="text-xs text-slate-500 mt-0.5">Premium · Llumar</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Tecnologia cerâmica · Máxima rejeição solar</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">36 meses</strong></p></div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Película de Segurança</p><p class="text-xs text-slate-500 mt-0.5">Segurança · 3M</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Anti-estilhaço · Retém fragmentos em impactos</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">24 meses</strong></p></div>
+          <div class="card bg-white rounded-xl border border-slate-200 p-5 opacity-60"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-700">Película Decorativa</p><p class="text-xs text-slate-500 mt-0.5">Estético · Diversos</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Inativo</span></div><p class="text-xs text-slate-400 mb-3">Acabamento fosco · Decorativo</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-500">6 meses</strong></p></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end page-top-pad -->
+</main>
+
+</div><!-- end app-container -->
+
+<script>
+  // ── Responsive padding for top bar ──────
+  function updateTopPad() {
+    const pad = document.getElementById('page-top-pad');
+    if (window.innerWidth >= 768) {
+      pad.style.paddingTop = '0';
+    } else {
+      pad.style.paddingTop = '56px';
+    }
+  }
+  updateTopPad();
+  window.addEventListener('resize', updateTopPad);
+
+  // ── Navigation ───────────────────────────
+  const pages = ['dashboard','busca','novo-cliente','perfil','veiculo','nova-instalacao','tipos'];
+
+  function navigate(pageName) {
+    pages.forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (el) el.classList.remove('active');
+    });
+    const target = document.getElementById('page-' + pageName);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.querySelectorAll('[data-page]').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.page === pageName) btn.classList.add('active');
+    });
+    closeSidebar();
+  }
+
+  // ── Mobile Sidebar ───────────────────────
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('mobile-overlay');
+
+  document.getElementById('hamburger').addEventListener('click', () => {
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+  });
+  overlay.addEventListener('click', closeSidebar);
+
+  function closeSidebar() {
+    if (window.innerWidth < 768) {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    }
+  }
+
+  // ── CPF mask ─────────────────────────────
+  function formatCPF(input) {
+    let v = input.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 9)      v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+    else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+    else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, '$1.$2');
+    input.value = v;
+  }
+
+  // ── Phone mask ───────────────────────────
+  function formatPhone(input) {
+    let v = input.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 10)     v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    else if (v.length > 6) v = v.replace(/(\d{2})(\d{4,5})(\d{0,4})/, '($1) $2-$3');
+    else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+    input.value = v;
+  }
+
+  // ── CEP mask ─────────────────────────────
+  function formatCEP(input) {
+    let v = input.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length > 5) v = v.replace(/(\d{5})(\d{0,3})/, '$1-$2');
+    input.value = v;
+  }
+
+  // ── Placeholder stubs — real logic in Supabase script below ─
+  function handleNewClientSubmit(e) { e.preventDefault(); }
+  function handleFormSubmit(e) { e.preventDefault(); }
+</script>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── Supabase client ──────────────────────
+  const SUPA_URL = 'https://bsewiosciksmlzndvnro.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZXdpb3NjaWtzbWx6bmR2bnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU5ODYsImV4cCI6MjA5MjIxMTk4Nn0.A281sBioDuT1f9oy12e5P-JJb4DWVnGgEkS6WPrJ08w';
+  const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+  window.supabase = sb;
+
+  // ── Auth helpers ─────────────────────────
+  function showApp(user) {
+    document.getElementById('auth-gate').style.display    = 'none';
+    document.getElementById('app-container').style.display = 'block';
+    // update sidebar username
+    const emailParts = user.email.split('@')[0];
+    const display = emailParts.charAt(0).toUpperCase() + emailParts.slice(1);
+    const initials = display.slice(0,2).toUpperCase();
+    const nameEl = document.querySelector('#sidebar [style*="white-space:nowrap"]');
+    const initEl = document.querySelector('#sidebar [style*="font-weight:700"]');
+    if (nameEl) nameEl.textContent = display;
+    if (initEl) initEl.textContent = initials;
+  }
+
+  function showLogin() {
+    document.getElementById('auth-gate').style.display    = 'flex';
+    document.getElementById('app-container').style.display = 'none';
+  }
+
+  // ── Check existing session on load ───────
+  sb.auth.getSession().then(({ data }) => {
+    if (data.session) {
+      showApp(data.session.user);
+    } else {
+      showLogin();
+    }
+  });
+
+  // ── Listen for auth changes ───────────────
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) showApp(session.user);
+    else          showLogin();
+  });
+
+  // ── Login handler ─────────────────────────
+  async function handleLogin(e) {
+    e.preventDefault();
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const btn      = document.getElementById('login-btn');
+    const errEl    = document.getElementById('login-error');
+
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="animate-spin" style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Entrando...';
+
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      let msg = 'Credenciais inválidas. Verifique e-mail e senha.';
+      if (error.message.includes('Email not confirmed')) msg = 'Confirme o e-mail antes de entrar.';
+      errEl.textContent  = msg;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '<svg style="width:16px;height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg> Entrar';
+    }
+    // success handled by onAuthStateChange
+  }
+
+  // ── Logout handler ────────────────────────
+  async function handleLogout() {
+    await sb.auth.signOut();
+  }
+
+  // ── Toggle password visibility ────────────
+  let pwVisible = false;
+  function togglePassword() {
+    pwVisible = !pwVisible;
+    const inp = document.getElementById('login-password');
+    inp.type  = pwVisible ? 'text' : 'password';
+  }
+
+  // ── ViaCEP integration ────────────────────
+  async function simulateCEP() {
+    const cepRaw = document.getElementById('nc-cep').value.replace(/\D/g, '');
+    if (cepRaw.length !== 8) {
+      alert('Digite um CEP válido com 8 dígitos.');
+      return;
+    }
+    try {
+      const res  = await fetch(`https://viacep.com.br/ws/${cepRaw}/json/`);
+      const data = await res.json();
+      if (data.erro) { alert('CEP não encontrado.'); return; }
+      document.getElementById('nc-rua').value    = data.logradouro || '';
+      document.getElementById('nc-bairro').value = data.bairro     || '';
+      document.getElementById('nc-cidade').value = data.localidade || '';
+      document.getElementById('nc-estado').value = data.uf         || '';
+    } catch {
+      alert('Erro ao buscar CEP. Verifique sua conexão.');
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  ESTADO GLOBAL
+  // ════════════════════════════════════════════════════════
+  const state = {
+    client:    null,   // registro completo do cliente atual
+    vehicles:  [],     // veículos do cliente atual
+    vehicle:   null,   // veículo selecionado
+    installs:  [],     // instalações do veículo selecionado
+    filmTypes: [],     // catálogo carregado do Supabase
+  };
+
+  // ════════════════════════════════════════════════════════
+  //  HELPERS
+  // ════════════════════════════════════════════════════════
+  function fmtCPF(cpf) {
+    const d = (cpf || '').replace(/\D/g, '');
+    return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  }
+  function fmtPhone(p) {
+    const d = (p || '').replace(/\D/g, '');
+    if (d.length === 11) return d.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    if (d.length === 10) return d.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    return p || '—';
+  }
+  function fmtDate(s) {
+    if (!s) return '—';
+    const [y, m, d] = s.split('-');
+    return `${d}/${m}/${y}`;
+  }
+  function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+    return diff;
+  }
+  function partLabel(key) {
+    const map = {
+      parabrisa: 'Parabrisa',
+      traseiro: 'Traseiro',
+      lateral_dianteiro_esq: 'Lat. Diant. Esq.',
+      lateral_dianteiro_dir: 'Lat. Diant. Dir.',
+      lateral_traseiro_esq: 'Lat. Tras. Esq.',
+      lateral_traseiro_dir: 'Lat. Tras. Dir.',
+      teto_solar: 'Teto Solar',
+    };
+    return map[key] || key;
+  }
+  function statusBadge(status) {
+    const cfg = {
+      active:   { label: 'Ativa',             cls: 'bg-emerald-100 text-emerald-700' },
+      expired:  { label: 'Expirada',          cls: 'bg-slate-100 text-slate-500'    },
+      removed:  { label: 'Removida',          cls: 'bg-red-50 text-red-500'         },
+      expiring: { label: 'Garantia a Vencer', cls: 'bg-amber-100 text-amber-700'    },
+    };
+    const c = cfg[status] || cfg.expired;
+    return `<span class="px-2.5 py-1 rounded-full text-xs font-medium ${c.cls}">${c.label}</span>`;
+  }
+  function effectiveStatus(install) {
+    if (install.status !== 'active') return install.status;
+    const days = daysUntil(install.warranty_until);
+    if (days !== null && days <= 30 && days >= 0) return 'expiring';
+    return 'active';
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  CATÁLOGO DE TIPOS DE PELÍCULA
+  // ════════════════════════════════════════════════════════
+  async function loadFilmTypes() {
+    const { data, error } = await sb.from('film_types').select('id, name, brand, warranty_months').eq('is_active', true).order('name');
+    if (error || !data) return;
+    state.filmTypes = data;
+    const sel = document.getElementById('film-type');
+    sel.innerHTML = '<option value="" disabled selected>Selecione o tipo...</option>';
+    data.forEach(ft => {
+      const desc = ft.brand ? ` — ${ft.brand}` : '';
+      const opt = document.createElement('option');
+      opt.value = ft.id;
+      opt.textContent = ft.name + desc;
+      opt.dataset.warrantyMonths = ft.warranty_months || '';
+      sel.appendChild(opt);
+    });
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  BUSCA POR CPF
+  // ════════════════════════════════════════════════════════
+  async function searchByCPF() {
+    const raw = document.getElementById('cpf-input').value.replace(/\D/g, '');
+    if (raw.length !== 11) { alert('Digite um CPF válido com 11 dígitos.'); return; }
+
+    const loading   = document.getElementById('search-loading');
+    const resultDiv = document.getElementById('search-result');
+    const notFound  = document.getElementById('not-found');
+
+    loading.classList.remove('hidden');
+    resultDiv.classList.add('hidden');
+    notFound.classList.add('hidden');
+
+    const { data: clients, error } = await sb
+      .from('clients')
+      .select('*')
+      .eq('cpf', raw)
+      .limit(1);
+
+    loading.classList.add('hidden');
+
+    if (error || !clients || clients.length === 0) {
+      // Pre-fill CPF in Novo Cliente form
+      const ncCPF = document.getElementById('nc-cpf');
+      if (ncCPF) {
+        let fmt = raw;
+        fmt = fmt.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        ncCPF.value = fmt;
+      }
+      notFound.classList.remove('hidden');
+      return;
+    }
+
+    const client = clients[0];
+    state.client = client;
+
+    // Load vehicles with their latest installation
+    const { data: vehicles } = await sb
+      .from('vehicles')
+      .select(`*, installations(id, status, warranty_until, film_type_id, film_types(name))`)
+      .eq('client_id', client.id)
+      .order('created_at', { ascending: false });
+
+    state.vehicles = vehicles || [];
+    renderSearchResult(client, state.vehicles);
+  }
+
+  function renderSearchResult(client, vehicles) {
+    const resultDiv = document.getElementById('search-result');
+    const cardEl    = document.getElementById('client-result-card');
+    const listEl    = document.getElementById('search-vehicles-list');
+
+    const city = [client.address_city, client.address_state].filter(Boolean).join(' — ');
+
+    cardEl.innerHTML = `
+      <div class="px-5 py-4 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+            <span class="text-blue-700 font-bold text-sm">${client.full_name.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase()}</span>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800">${client.full_name}</p>
+            <p class="text-xs text-slate-500">CPF: ${fmtCPF(client.cpf)}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-slate-600">
+          ${client.phone ? `<span>${fmtPhone(client.phone)}</span>` : ''}
+          ${city ? `<span class="hidden sm:block">${city}</span>` : ''}
+          <button onclick="openProfile()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+            Ver Perfil
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+          </button>
+        </div>
+      </div>`;
+
+    if (!vehicles || vehicles.length === 0) {
+      listEl.innerHTML = '<p class="text-sm text-slate-400">Nenhum veículo cadastrado.</p>';
+    } else {
+      listEl.innerHTML = vehicles.map((v, idx) => {
+        const installs = v.installations || [];
+        const latest   = installs.sort((a,b) => new Date(b.warranty_until||0) - new Date(a.warranty_until||0))[0];
+        const es = latest ? effectiveStatus(latest) : null;
+        return `
+          <div class="bg-white rounded-xl border border-slate-200 px-4 py-3 flex items-center justify-between gap-3 hover:border-blue-300 transition-colors cursor-pointer" onclick="openVehicle(${idx})">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-800">${v.brand} ${v.model} ${v.year}</p>
+                <p class="text-xs text-slate-500">${v.plate}${v.color ? ' · ' + v.color : ''}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              ${es ? statusBadge(es) : '<span class="text-xs text-slate-400">Sem instalações</span>'}
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    resultDiv.classList.remove('hidden');
+    setTimeout(() => resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  PERFIL DO CLIENTE
+  // ════════════════════════════════════════════════════════
+  function openProfile() {
+    renderProfile();
+    navigate('perfil');
+  }
+
+  function renderProfile() {
+    const c = state.client;
+    if (!c) return;
+
+    document.getElementById('profile-name').textContent = c.full_name;
+    document.getElementById('profile-cpf').textContent  = 'CPF: ' + fmtCPF(c.cpf);
+
+    const fields = [
+      { label: 'Telefone',        val: fmtPhone(c.phone) },
+      { label: 'E-mail',          val: c.email || '—'    },
+      { label: 'Cidade',          val: c.address_city ? `${c.address_city}/${c.address_state}` : '—' },
+      { label: 'Cliente desde',   val: fmtDate(c.created_at ? c.created_at.split('T')[0] : null) },
+    ];
+    document.getElementById('profile-client-data').innerHTML = fields.map(f => `
+      <div>
+        <p class="text-xs text-slate-400 mb-0.5">${f.label}</p>
+        <p class="font-medium text-slate-800">${f.val}</p>
+      </div>`).join('');
+
+    renderProfileVehicles();
+  }
+
+  function renderProfileVehicles() {
+    const vehicles = state.vehicles;
+    const countEl  = document.getElementById('profile-vehicles-count');
+    const gridEl   = document.getElementById('profile-vehicles-grid');
+
+    countEl.textContent = `(${vehicles.length})`;
+
+    if (vehicles.length === 0) {
+      gridEl.innerHTML = '<p class="text-sm text-slate-400">Nenhum veículo cadastrado.</p>';
+      return;
+    }
+
+    gridEl.innerHTML = vehicles.map((v, idx) => {
+      const installs = v.installations || [];
+      const latest   = installs.sort((a,b) => new Date(b.warranty_until||0) - new Date(a.warranty_until||0))[0];
+      const es = latest ? effectiveStatus(latest) : null;
+      const filmName = latest?.film_types?.name || null;
+      return `
+        <div class="card bg-white rounded-xl border border-slate-200 p-5 flex flex-col gap-3">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-semibold text-slate-800">${v.brand} ${v.model}</p>
+              <p class="text-xs text-slate-500">${v.year}${v.color ? ' · ' + v.color : ''} · ${v.plate}</p>
+            </div>
+            ${es ? statusBadge(es) : ''}
+          </div>
+          ${filmName ? `<p class="text-xs text-slate-500">Última: <span class="font-medium text-slate-700">${filmName}</span></p>` : '<p class="text-xs text-slate-400">Sem instalações</p>'}
+          <button onclick="openVehicle(${idx})" class="mt-auto text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer inline-flex items-center gap-1">
+            Ver Histórico
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+          </button>
+        </div>`;
+    }).join('');
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  VEÍCULO + HISTÓRICO
+  // ════════════════════════════════════════════════════════
+  async function openVehicle(idx) {
+    const v = state.vehicles[idx];
+    if (!v) return;
+    state.vehicle = v;
+
+    // load full installations for this vehicle
+    const { data: installs } = await sb
+      .from('installations')
+      .select('*, film_types(name, brand)')
+      .eq('vehicle_id', v.id)
+      .order('installed_at', { ascending: false });
+
+    state.installs = installs || [];
+    renderVehicle();
+    navigate('veiculo');
+  }
+
+  function renderVehicle() {
+    const v = state.vehicle;
+    const c = state.client;
+    if (!v) return;
+
+    document.getElementById('veiculo-title').textContent    = `${v.brand} ${v.model} ${v.year}`;
+    document.getElementById('veiculo-subtitle').textContent = `${c ? c.full_name : ''} · ${v.plate}`;
+    document.getElementById('nova-inst-subtitle').textContent = `${v.brand} ${v.model} ${v.year} · ${v.plate}${c ? ' · ' + c.full_name : ''}`;
+
+    const fields = [
+      { label: 'Marca',  val: v.brand  },
+      { label: 'Modelo', val: v.model  },
+      { label: 'Ano',    val: v.year   },
+      { label: 'Cor',    val: v.color || '—' },
+      { label: 'Placa',  val: v.plate  },
+      { label: 'Observações', val: v.notes || '—' },
+    ];
+    document.getElementById('vehicle-data-grid').innerHTML = fields.map(f => `
+      <div>
+        <p class="text-xs text-slate-400 mb-0.5">${f.label}</p>
+        <p class="font-medium text-slate-800">${f.val}</p>
+      </div>`).join('');
+
+    renderTimeline();
+  }
+
+  function renderTimeline() {
+    const timeline = document.getElementById('vehicle-timeline');
+    const installs = state.installs;
+
+    if (installs.length === 0) {
+      timeline.innerHTML = `
+        <div class="text-center py-10 text-slate-400">
+          <p class="text-sm">Nenhuma instalação registrada para este veículo.</p>
+        </div>`;
+      return;
+    }
+
+    timeline.innerHTML = installs.map(inst => {
+      const es    = effectiveStatus(inst);
+      const badge = statusBadge(es);
+      const name  = inst.film_types?.name || 'Película não especificada';
+      const brand = inst.film_types?.brand || '';
+      const days  = daysUntil(inst.warranty_until);
+      const parts = (inst.covered_parts || []).map(p => `<span class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full">${partLabel(p)}</span>`).join('');
+
+      let iconBg, iconSvg;
+      if (es === 'active' || es === 'expiring') {
+        iconBg  = es === 'expiring' ? 'bg-amber-100' : 'bg-emerald-100';
+        iconSvg = `<svg class="w-5 h-5 ${es === 'expiring' ? 'text-amber-600' : 'text-emerald-600'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>`;
+      } else if (es === 'removed') {
+        iconBg  = 'bg-red-50';
+        iconSvg = `<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+      } else {
+        iconBg  = 'bg-slate-100';
+        iconSvg = `<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+      }
+
+      const opacity = (es === 'expired') ? ' opacity-75' : (es === 'removed') ? ' opacity-60' : '';
+      let footer = '';
+      if (inst.warranty_until) {
+        if (es === 'active') {
+          footer = `<span>Garantia até ${fmtDate(inst.warranty_until)}</span>${days !== null ? `<span class="text-emerald-600 font-medium">${days} dias restantes</span>` : ''}`;
+        } else if (es === 'expiring') {
+          footer = `<span>Garantia até ${fmtDate(inst.warranty_until)}</span><span class="text-amber-600 font-medium">${days} dias restantes</span>`;
+        } else if (es === 'expired') {
+          footer = `<span>Garantia expirou em ${fmtDate(inst.warranty_until)}</span>`;
+        } else {
+          footer = `<span>Instalado em ${fmtDate(inst.installed_at)}</span>`;
+        }
+      } else {
+        footer = `<span>Instalado em ${fmtDate(inst.installed_at)}</span>`;
+      }
+
+      return `
+        <div class="timeline-item relative pl-12">
+          <div class="absolute left-0 top-0 w-10 h-10 rounded-full ${iconBg} border-2 border-white shadow flex items-center justify-center">
+            ${iconSvg}
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-4 ml-2${opacity}">
+            <div class="flex items-start justify-between flex-wrap gap-2 mb-3">
+              <div>
+                <p class="font-semibold text-slate-800">${name}</p>
+                <p class="text-xs text-slate-500 mt-0.5">${fmtDate(inst.installed_at)}${brand ? ' · ' + brand : ''}</p>
+              </div>
+              ${badge}
+            </div>
+            ${parts ? `<div class="flex flex-wrap gap-1.5 mb-3">${parts}</div>` : ''}
+            ${footer ? `<div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 border-t border-slate-100 pt-3">${footer}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  NOVO CLIENTE — submit real
+  // ════════════════════════════════════════════════════════
+  (function wireNewClient() {
+    // Override the stub once the DOM is ready
+    window.handleNewClientSubmit = async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('new-client-btn');
+      const spinSVG = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+      btn.disabled = true;
+      btn.innerHTML = spinSVG + ' Cadastrando...';
+
+      const cpfRaw = document.getElementById('nc-cpf').value.replace(/\D/g,'');
+      const payload = {
+        full_name:          document.getElementById('nc-nome').value.trim(),
+        cpf:                cpfRaw,
+        phone:              document.getElementById('nc-tel').value.replace(/\D/g,'') || null,
+        email:              document.getElementById('nc-email').value.trim() || null,
+        birth_date:         document.getElementById('nc-nasc').value || null,
+        address_street:     document.getElementById('nc-rua').value.trim() || null,
+        address_number:     document.getElementById('nc-num').value.trim() || null,
+        address_complement: document.getElementById('nc-comp').value.trim() || null,
+        address_district:   document.getElementById('nc-bairro').value.trim() || null,
+        address_city:       document.getElementById('nc-cidade').value.trim() || null,
+        address_state:      document.getElementById('nc-estado').value || null,
+        address_zip_code:   document.getElementById('nc-cep').value.trim() || null,
+      };
+
+      const { data, error } = await sb.from('clients').insert(payload).select().single();
+
+      if (error) {
+        alert('Erro ao cadastrar: ' + (error.message.includes('unique') ? 'CPF já cadastrado.' : error.message));
+        btn.disabled = false;
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg> Cadastrar Cliente';
+        return;
+      }
+
+      // Load into state and open profile
+      state.client   = data;
+      state.vehicles = [];
+      renderProfile();
+      navigate('perfil');
+      e.target.reset();
+      btn.disabled = false;
+      btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg> Cadastrar Cliente';
+    };
+  })();
+
+  // ════════════════════════════════════════════════════════
+  //  NOVA INSTALAÇÃO — submit real
+  // ════════════════════════════════════════════════════════
+  (function wireInstallForm() {
+    window.handleFormSubmit = async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const spinSVG = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+      btn.disabled = true;
+      btn.innerHTML = spinSVG + ' Salvando...';
+
+      if (!state.vehicle) { alert('Nenhum veículo selecionado.'); btn.disabled = false; return; }
+
+      const partMap = {
+        'Parabrisa':         'parabrisa',
+        'Traseiro':          'traseiro',
+        'Lat. Dianteiro Esq.': 'lateral_dianteiro_esq',
+        'Lat. Dianteiro Dir.': 'lateral_dianteiro_dir',
+        'Lat. Traseiro Esq.':  'lateral_traseiro_esq',
+        'Lat. Traseiro Dir.':  'lateral_traseiro_dir',
+        'Teto Solar':        'teto_solar',
+      };
+      const coveredParts = [...document.querySelectorAll('#page-nova-instalacao input[type=checkbox]:checked')]
+        .map(cb => partMap[cb.closest('label').querySelector('span').textContent.trim()] )
+        .filter(Boolean);
+
+      const filmTypeId    = document.getElementById('film-type').value || null;
+      const warrantyMonths = parseInt(document.getElementById('warranty').value) || null;
+
+      // auto-fill warranty from film type if not manually set
+      let resolvedWarranty = warrantyMonths;
+      if (!resolvedWarranty && filmTypeId) {
+        const ft = state.filmTypes.find(f => f.id === filmTypeId);
+        if (ft) resolvedWarranty = ft.warranty_months;
+      }
+
+      const payload = {
+        vehicle_id:      state.vehicle.id,
+        film_type_id:    filmTypeId,
+        installed_at:    document.getElementById('install-date').value,
+        warranty_months: resolvedWarranty,
+        covered_parts:   coveredParts,
+        notes:           document.getElementById('notes').value.trim() || null,
+      };
+
+      const { error } = await sb.from('installations').insert(payload);
+
+      if (error) {
+        alert('Erro ao registrar instalação: ' + error.message);
+        btn.disabled = false;
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Registrar Instalação';
+        return;
+      }
+
+      // reload vehicle page with fresh data
+      const vehicleIdx = state.vehicles.findIndex(v => v.id === state.vehicle.id);
+      await openVehicle(vehicleIdx >= 0 ? vehicleIdx : 0);
+      btn.disabled = false;
+      btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Registrar Instalação';
+    };
+  })();
+
+  // ════════════════════════════════════════════════════════
+  //  INIT — carrega dados após login
+  // ════════════════════════════════════════════════════════
+  const _origShowApp = showApp;
+  window.showApp = function(user) {
+    _origShowApp(user);
+    loadFilmTypes();
+  };
+</script>
+</body>
+</html>

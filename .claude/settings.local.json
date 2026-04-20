@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__magic__21st_magic_component_inspiration",
+      "Bash(python3 \"C:\\\\Users\\\\jpmor\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"automotive service management dashboard internal tool professional\" --design-system -p \"PeliculaApp\" -f markdown)",
+      "Bash(python \"C:\\\\Users\\\\jpmor\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"automotive service management dashboard internal tool professional\" --design-system -p \"PeliculaApp\" -f markdown)",
+      "Bash(PYTHONUTF8=1 python \"C:\\\\Users\\\\jpmor\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"automotive service management dashboard internal tool professional\" --design-system -p \"PeliculaApp\" -f markdown)",
+      "Bash(PYTHONUTF8=1 python \"C:\\\\Users\\\\jpmor\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"animation accessibility form\" --domain ux)",
+      "Bash(PYTHONUTF8=1 python \"C:\\\\Users\\\\jpmor\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"layout responsive sidebar\" --stack html-tailwind)",
+      "Bash(curl -s -X POST https://bsewiosciksmlzndvnro.supabase.co/auth/v1/admin/users -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZXdpb3NjaWtzbWx6bmR2bnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU5ODYsImV4cCI6MjA5MjIxMTk4Nn0.A281sBioDuT1f9oy12e5P-JJb4DWVnGgEkS6WPrJ08w' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZXdpb3NjaWtzbWx6bmR2bnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU5ODYsImV4cCI6MjA5MjIxMTk4Hn0.A281sBioDuT1f9oy12e5P-JJb4DWVnGgEkS6WPrJ08w' -H 'Content-Type: application/json' -d '{\"email\":\"admin@peliculaapp.com\",\"password\":\"PeliculaAdmin@2026\",\"email_confirm\":true}')",
+      "Bash(curl -s -X POST https://bsewiosciksmlzndvnro.supabase.co/auth/v1/signup -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZXdpb3NjaWtzbWx6bmR2bnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU5ODYsImV4cCI6MjA5MjIxMTk4Nn0.A281sBioDuT1f9oy12e5P-JJb4DWVnGgEkS6WPrJ08w' -H 'Content-Type: application/json' -d '{\"email\":\"admin@peliculaapp.com\",\"password\":\"PeliculaAdmin@2026\"}')",
+      "Bash(curl -s -X POST https://bsewiosciksmlzndvnro.supabase.co/auth/v1/signup -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZXdpb3NjaWtzbWx6bmR2bnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU5ODYsImV4cCI6MjA5MjIxMTk4Nn0.A281sBioDuT1f9oy12e5P-JJb4DWVnGgEkS6WPrJ08w' -H 'Content-Type: application/json' -d '{\"email\":\"admin@gmail.com\",\"password\":\"PeliculaAdmin@2026\"}')"
+    ]
+  }
+}
