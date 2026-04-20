@@ -278,8 +278,8 @@
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Clientes</p>
-                <p class="text-3xl font-bold text-slate-800 mt-1">248</p>
-                <p class="text-xs text-emerald-600 mt-1 font-medium">+12 este mês</p>
+                <p id="dash-total-clients" class="text-3xl font-bold text-slate-800 mt-1">—</p>
+                <p id="dash-new-clients" class="text-xs text-emerald-600 mt-1 font-medium"></p>
               </div>
               <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -292,8 +292,8 @@
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Instalações / Mês</p>
-                <p class="text-3xl font-bold text-slate-800 mt-1">34</p>
-                <p class="text-xs text-emerald-600 mt-1 font-medium">+8 vs. anterior</p>
+                <p id="dash-month-installs" class="text-3xl font-bold text-slate-800 mt-1">—</p>
+                <p class="text-xs text-slate-400 mt-1">este mês</p>
               </div>
               <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
                 <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -306,7 +306,7 @@
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Películas Ativas</p>
-                <p class="text-3xl font-bold text-slate-800 mt-1">187</p>
+                <p id="dash-active-installs" class="text-3xl font-bold text-slate-800 mt-1">—</p>
                 <p class="text-xs text-slate-400 mt-1">na garantia</p>
               </div>
               <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center flex-shrink-0">
@@ -320,7 +320,7 @@
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Garantias a Vencer</p>
-                <p class="text-3xl font-bold text-amber-500 mt-1">9</p>
+                <p id="dash-expiring-count" class="text-3xl font-bold text-amber-500 mt-1">—</p>
                 <p class="text-xs text-amber-600 mt-1 font-medium">próximos 30 dias</p>
               </div>
               <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
@@ -350,42 +350,8 @@
                     <th class="text-left text-xs font-medium text-slate-500 px-4 py-3 uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50">
-                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="navigate('veiculo')">
-                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">João Silva</p><p class="text-xs text-slate-400">123.456.789-00</p></td>
-                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Corolla 2021</p><p class="text-xs text-slate-400">ABC-1234</p></td>
-                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Insulfilm G20</td>
-                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">12/04/2026</td>
-                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativa</span></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer" onclick="navigate('veiculo')">
-                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Maria Santos</p><p class="text-xs text-slate-400">987.654.321-00</p></td>
-                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Civic 2022</p><p class="text-xs text-slate-400">XYZ-5678</p></td>
-                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Nano Cerâmica Llumar</td>
-                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">10/04/2026</td>
-                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativa</span></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
-                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Carlos Oliveira</p><p class="text-xs text-slate-400">456.123.789-00</p></td>
-                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Polo 2020</p><p class="text-xs text-slate-400">DEF-9012</p></td>
-                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Película Solar 3M</td>
-                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">07/04/2026</td>
-                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">A Vencer</span></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
-                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Ana Pereira</p><p class="text-xs text-slate-400">321.654.987-00</p></td>
-                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">HB20 2023</p><p class="text-xs text-slate-400">GHI-3456</p></td>
-                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Insulfilm G35</td>
-                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">03/04/2026</td>
-                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativa</span></td>
-                  </tr>
-                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
-                    <td class="px-5 py-3.5"><p class="font-medium text-slate-800">Roberto Lima</p><p class="text-xs text-slate-400">654.321.987-00</p></td>
-                    <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">Onix 2021</p><p class="text-xs text-slate-400">JKL-7890</p></td>
-                    <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">Película de Segurança</td>
-                    <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">28/03/2026</td>
-                    <td class="px-4 py-3.5"><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">Expirada</span></td>
-                  </tr>
+                <tbody id="dash-recent-tbody" class="divide-y divide-slate-50">
+                  <tr><td colspan="5" class="px-5 py-6 text-center text-slate-400 text-sm">Carregando...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -398,37 +364,8 @@
               </svg>
               <h2 class="font-semibold text-slate-800 text-sm">Garantias a Vencer</h2>
             </div>
-            <div class="divide-y divide-slate-50">
-              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
-                <div class="flex items-start justify-between gap-2">
-                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Carlos Oliveira</p><p class="text-xs text-slate-500">Polo 2020 · DEF-9012</p></div>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex-shrink-0">7 dias</span>
-                </div>
-              </div>
-              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
-                <div class="flex items-start justify-between gap-2">
-                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Fernanda Costa</p><p class="text-xs text-slate-500">Argo 2022 · MNO-1234</p></div>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex-shrink-0">14 dias</span>
-                </div>
-              </div>
-              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
-                <div class="flex items-start justify-between gap-2">
-                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Paulo Mendes</p><p class="text-xs text-slate-500">Sandero 2019 · PQR-5678</p></div>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 flex-shrink-0">21 dias</span>
-                </div>
-              </div>
-              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
-                <div class="flex items-start justify-between gap-2">
-                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Juliana Freitas</p><p class="text-xs text-slate-500">Tracker 2023 · STU-9012</p></div>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 flex-shrink-0">28 dias</span>
-                </div>
-              </div>
-              <div class="px-5 py-3.5 hover:bg-slate-50 cursor-pointer transition-colors">
-                <div class="flex items-start justify-between gap-2">
-                  <div class="min-w-0"><p class="text-sm font-medium text-slate-800 truncate">Marcos Rodrigues</p><p class="text-xs text-slate-500">Virtus 2021 · VWX-3456</p></div>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 flex-shrink-0">30 dias</span>
-                </div>
-              </div>
+            <div id="dash-expiring-list" class="divide-y divide-slate-50">
+              <div class="px-5 py-6 text-center text-slate-400 text-sm">Carregando...</div>
             </div>
           </div>
         </div>
@@ -745,6 +682,88 @@
     </div>
 
     <!-- ═══════════════════════════════════
+         PAGE: NOVO VEÍCULO
+    ═══════════════════════════════════ -->
+    <div id="page-novo-veiculo" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center gap-3">
+          <button onclick="navigate('perfil')" aria-label="Voltar" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+          </button>
+          <div>
+            <h1 class="text-xl font-semibold text-slate-800">Novo Veículo</h1>
+            <p id="novo-veiculo-subtitle" class="text-sm text-slate-500 mt-0.5">—</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <div class="max-w-2xl">
+          <form onsubmit="handleNewVehicleSubmit(event)" class="space-y-5">
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div class="px-5 py-3.5 border-b border-slate-100"><h2 class="text-sm font-semibold text-slate-700">Dados do Veículo</h2></div>
+              <div class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div>
+                  <label for="nv-marca" class="block text-sm font-medium text-slate-700 mb-1.5">Marca <span class="text-red-500">*</span></label>
+                  <input id="nv-marca" type="text" required placeholder="Ex.: Toyota, Volkswagen"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nv-modelo" class="block text-sm font-medium text-slate-700 mb-1.5">Modelo <span class="text-red-500">*</span></label>
+                  <input id="nv-modelo" type="text" required placeholder="Ex.: Corolla, Gol"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nv-ano" class="block text-sm font-medium text-slate-700 mb-1.5">Ano <span class="text-red-500">*</span></label>
+                  <input id="nv-ano" type="number" required placeholder="2024" min="1950" max="2030"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div>
+                  <label for="nv-cor" class="block text-sm font-medium text-slate-700 mb-1.5">Cor</label>
+                  <input id="nv-cor" type="text" placeholder="Ex.: Prata, Preto"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="nv-placa" class="block text-sm font-medium text-slate-700 mb-1.5">Placa <span class="text-red-500">*</span></label>
+                  <input id="nv-placa" type="text" required placeholder="ABC1234 ou ABC1D23" maxlength="8"
+                    oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                  <p class="text-xs text-slate-400 mt-1">Sem traços ou espaços — ex.: ABC1234</p>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="nv-obs" class="block text-sm font-medium text-slate-700 mb-1.5">Observações</label>
+                  <textarea id="nv-obs" rows="2" placeholder="Ex.: Vidro traseiro com rachado..."
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 resize-none"></textarea>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-3 pb-6">
+              <button type="button" onclick="navigate('perfil')"
+                class="px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 cursor-pointer border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" id="new-vehicle-btn"
+                class="btn-primary px-6 py-2.5 rounded-xl text-sm font-semibold inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                Adicionar Veículo
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
          PAGE: VEÍCULO + HISTÓRICO
     ═══════════════════════════════════ -->
     <div id="page-veiculo" class="page">
@@ -889,7 +908,7 @@
   window.addEventListener('resize', updateTopPad);
 
   // ── Navigation ───────────────────────────
-  const pages = ['dashboard','busca','novo-cliente','perfil','veiculo','nova-instalacao','tipos'];
+  const pages = ['dashboard','busca','novo-cliente','perfil','novo-veiculo','veiculo','nova-instalacao','tipos'];
 
   function navigate(pageName) {
     pages.forEach(p => {
@@ -1253,6 +1272,15 @@
     navigate('perfil');
   }
 
+  // Atualiza subtítulo da página "Novo Veículo" antes de navegar
+  const _origNavigate = navigate;
+  navigate = function(page) {
+    if (page === 'novo-veiculo' && state.client) {
+      document.getElementById('novo-veiculo-subtitle').textContent = state.client.full_name;
+    }
+    _origNavigate(page);
+  };
+
   function renderProfile() {
     const c = state.client;
     if (!c) return;
@@ -1535,12 +1563,141 @@
   })();
 
   // ════════════════════════════════════════════════════════
+  //  DASHBOARD — dados reais do Supabase
+  // ════════════════════════════════════════════════════════
+  async function loadDashboard() {
+    const now       = new Date();
+    const y         = now.getFullYear();
+    const m         = String(now.getMonth() + 1).padStart(2, '0');
+    const monthStart = `${y}-${m}-01`;
+
+    // Rodar consultas em paralelo
+    const [
+      { count: totalClients },
+      { count: monthInstalls },
+      { count: activeInstalls },
+      { data: expiring },
+      { data: recent },
+    ] = await Promise.all([
+      sb.from('clients').select('*', { count: 'exact', head: true }),
+      sb.from('installations').select('*', { count: 'exact', head: true }).gte('installed_at', monthStart),
+      sb.from('installations').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+      sb.from('warranties_expiring_soon').select('*').limit(8),
+      sb.from('installations')
+        .select('installed_at, status, film_types(name), vehicles(brand, model, year, plate, clients(full_name, cpf))')
+        .order('installed_at', { ascending: false })
+        .limit(5),
+    ]);
+
+    // Stats
+    document.getElementById('dash-total-clients').textContent   = totalClients ?? '—';
+    document.getElementById('dash-month-installs').textContent  = monthInstalls ?? '—';
+    document.getElementById('dash-active-installs').textContent = activeInstalls ?? '—';
+    document.getElementById('dash-expiring-count').textContent  = expiring ? expiring.length : '—';
+
+    // Tabela instalações recentes
+    const tbody = document.getElementById('dash-recent-tbody');
+    if (!recent || recent.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-6 text-center text-slate-400 text-sm">Nenhuma instalação registrada.</td></tr>';
+    } else {
+      tbody.innerHTML = recent.map(inst => {
+        const v    = inst.vehicles;
+        const c    = v?.clients;
+        const es   = effectiveStatus(inst);
+        const badge = statusBadge(es);
+        return `<tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-5 py-3.5"><p class="font-medium text-slate-800">${c?.full_name || '—'}</p><p class="text-xs text-slate-400">${c ? fmtCPF(c.cpf) : ''}</p></td>
+          <td class="px-4 py-3.5 hidden sm:table-cell"><p class="text-slate-700">${v ? v.brand + ' ' + v.model : '—'}</p><p class="text-xs text-slate-400">${v?.plate || ''}</p></td>
+          <td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">${inst.film_types?.name || '—'}</td>
+          <td class="px-4 py-3.5 text-slate-500 text-xs whitespace-nowrap">${fmtDate(inst.installed_at)}</td>
+          <td class="px-4 py-3.5">${badge}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Lista garantias a vencer
+    const listEl = document.getElementById('dash-expiring-list');
+    if (!expiring || expiring.length === 0) {
+      listEl.innerHTML = '<div class="px-5 py-6 text-center text-slate-400 text-sm">Nenhuma garantia a vencer nos próximos 30 dias.</div>';
+    } else {
+      listEl.innerHTML = expiring.map(row => {
+        const days = daysUntil(row.warranty_until);
+        const cls  = days <= 7 ? 'bg-red-100 text-red-700' : days <= 14 ? 'bg-amber-100 text-amber-700' : 'bg-orange-100 text-orange-700';
+        return `<div class="px-5 py-3.5 hover:bg-slate-50 transition-colors">
+          <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <p class="text-sm font-medium text-slate-800 truncate">${row.client_name}</p>
+              <p class="text-xs text-slate-500">${row.brand} ${row.model} ${row.year} · ${row.plate}</p>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${cls} flex-shrink-0">${days} dia${days !== 1 ? 's' : ''}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  NOVO VEÍCULO — submit real
+  // ════════════════════════════════════════════════════════
+  async function handleNewVehicleSubmit(e) {
+    e.preventDefault();
+    if (!state.client) { alert('Nenhum cliente selecionado.'); return; }
+
+    const btn = document.getElementById('new-vehicle-btn');
+    const spinSVG = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+    btn.disabled = true;
+    btn.innerHTML = spinSVG + ' Salvando...';
+
+    const payload = {
+      client_id: state.client.id,
+      brand:     document.getElementById('nv-marca').value.trim(),
+      model:     document.getElementById('nv-modelo').value.trim(),
+      year:      parseInt(document.getElementById('nv-ano').value),
+      color:     document.getElementById('nv-cor').value.trim() || null,
+      plate:     document.getElementById('nv-placa').value.trim().toUpperCase(),
+      notes:     document.getElementById('nv-obs').value.trim() || null,
+    };
+
+    const { data: newVehicle, error } = await sb.from('vehicles').insert(payload).select().single();
+
+    if (error) {
+      const msg = error.message.includes('unique') ? 'Placa já cadastrada no sistema.' : error.message;
+      alert('Erro ao cadastrar veículo: ' + msg);
+      btn.disabled = false;
+      btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg> Adicionar Veículo';
+      return;
+    }
+
+    // Recarrega veículos do cliente e volta ao perfil
+    const { data: vehicles } = await sb
+      .from('vehicles')
+      .select('*, installations(id, status, warranty_until, film_type_id, film_types(name))')
+      .eq('client_id', state.client.id)
+      .order('created_at', { ascending: false });
+
+    state.vehicles = vehicles || [];
+    renderProfileVehicles();
+    e.target.reset();
+    btn.disabled = false;
+    btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg> Adicionar Veículo';
+    navigate('perfil');
+  }
+
+  // ════════════════════════════════════════════════════════
   //  INIT — carrega dados após login
   // ════════════════════════════════════════════════════════
   const _origShowApp = showApp;
   window.showApp = function(user) {
     _origShowApp(user);
     loadFilmTypes();
+    loadDashboard();
+  };
+
+  // Recarrega dashboard toda vez que o usuário navega para ele
+  const _origNavigate2 = navigate;
+  navigate = function(page) {
+    _origNavigate2(page);
+    if (page === 'dashboard') loadDashboard();
   };
 </script>
 </body>
