@@ -1,2 +1,0 @@
-  //  NOVA INSTALAÇÃO — submit real
-

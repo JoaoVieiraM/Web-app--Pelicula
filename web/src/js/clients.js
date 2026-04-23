@@ -1,8 +1,0 @@
-  //  BUSCA POR CPF
-
-  //  PERFIL DO CLIENTE
-
-  //  NOVO CLIENTE — submit real
-
-  //  MODAL: EDITAR CLIENTE
-
