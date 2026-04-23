@@ -452,17 +452,16 @@ VALUES
 3. Informe o e-mail e uma senha temporária
 4. O funcionário faz login na aplicação com essas credenciais
 
-### Variáveis de ambiente necessárias para o frontend
+### Variáveis necessárias para o frontend
 
-Encontre os valores em **Supabase Dashboard → Project Settings → API**:
+Encontre os valores em **Supabase Dashboard → Project Settings → API** e cole diretamente no início do `<script>` em `index.html`:
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://[seu-projeto].supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=[sua-anon-key]
-SUPABASE_SERVICE_ROLE_KEY=[sua-service-role-key]
+```js
+const SUPA_URL = 'https://[seu-projeto].supabase.co';
+const SUPA_KEY = '[sua-anon-key]'; // Anon/Public key — segura para o frontend
 ```
 
-> `SUPABASE_SERVICE_ROLE_KEY` **nunca deve ser exposta no frontend**. Use apenas em chamadas server-side (Next.js API routes ou Server Components).
+> **Importante:** Use apenas a **Anon Key** no frontend. A **Service Role Key** nunca deve ser exposta no código do cliente — ela bypassa o RLS e concede acesso total ao banco.
 
 ---
 

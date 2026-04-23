@@ -116,7 +116,7 @@
     </div>
 
     <!-- Login form -->
-    <div style="background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
+    <div id="login-card" style="background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
       <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 24px;">Entrar na sua conta</h2>
 
       <div id="login-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#DC2626;"></div>
@@ -150,6 +150,85 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
           </svg>
           Entrar
+        </button>
+        <div style="text-align:center;margin-top:4px;">
+          <button type="button" onclick="showForgotPanel()"
+            style="background:none;border:none;color:#64748B;font-size:12px;cursor:pointer;text-decoration:underline;font-family:inherit;"
+            onmouseover="this.style.color='#0369A1'" onmouseout="this.style.color='#64748B'">
+            Esqueci minha senha
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- PANEL: Esqueci minha senha -->
+    <div id="forgot-panel" style="display:none;background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <button type="button" onclick="showLoginPanel()"
+          style="background:none;border:none;cursor:pointer;color:#64748B;padding:4px;display:flex;align-items:center;"
+          aria-label="Voltar">
+          <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+          </svg>
+        </button>
+        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Recuperar senha</h2>
+      </div>
+      <p style="font-size:13px;color:#475569;margin:0 0 20px;">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
+      <div id="forgot-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#DC2626;"></div>
+      <div id="forgot-success" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#15803D;"></div>
+      <form onsubmit="handleForgotPassword(event)" style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <label for="forgot-email" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
+          <input id="forgot-email" type="email" required autocomplete="email"
+            placeholder="seu@email.com"
+            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+        <button type="submit" id="forgot-btn"
+          style="width:100%;padding:12px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:background-color 150ms ease;"
+          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+          </svg>
+          Enviar link de recuperação
+        </button>
+      </form>
+    </div>
+
+    <!-- PANEL: Redefinir senha (chegou via link do e-mail) -->
+    <div id="reset-panel" style="display:none;background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#F0FDF4;margin-bottom:12px;">
+          <svg style="width:24px;height:24px;color:#16A34A;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+          </svg>
+        </div>
+        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 4px;">Criar nova senha</h2>
+        <p style="font-size:13px;color:#64748B;margin:0;">Escolha uma senha forte para sua conta.</p>
+      </div>
+      <div id="reset-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#DC2626;"></div>
+      <form onsubmit="handlePasswordReset(event)" style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <label for="reset-password" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nova senha</label>
+          <input id="reset-password" type="password" required minlength="8" autocomplete="new-password"
+            placeholder="Mínimo 8 caracteres"
+            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+        <div>
+          <label for="reset-confirm" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Confirmar nova senha</label>
+          <input id="reset-confirm" type="password" required minlength="8" autocomplete="new-password"
+            placeholder="Repita a senha"
+            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+        <button type="submit" id="reset-btn"
+          style="width:100%;padding:12px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:background-color 150ms ease;"
+          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Salvar nova senha
         </button>
       </form>
     </div>
@@ -202,7 +281,7 @@
   <nav style="flex:1;padding:16px 12px;overflow-y:auto;">
     <p style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:0 12px;margin-bottom:8px;">Menu</p>
 
-    <button onclick="navigate('dashboard')" data-page="dashboard" class="sidebar-link active">
+    <button id="nav-dashboard" onclick="navigate('dashboard')" data-page="dashboard" class="sidebar-link" style="display:none;">
       <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
       </svg>
@@ -216,11 +295,18 @@
       Busca de Clientes
     </button>
 
-    <button onclick="navigate('tipos')" data-page="tipos" class="sidebar-link" style="margin-top:4px;">
+    <button id="nav-tipos" onclick="navigate('tipos')" data-page="tipos" class="sidebar-link" style="margin-top:4px;display:none;">
       <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"/>
       </svg>
       Tipos de Película
+    </button>
+
+    <button id="nav-usuarios" onclick="navigate('usuarios')" data-page="usuarios" class="sidebar-link" style="margin-top:4px;display:none;">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+      </svg>
+      Usuários
     </button>
   </nav>
 
@@ -233,7 +319,7 @@
         </div>
         <div style="min-width:0;">
           <p style="color:white;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Rafael Fontes</p>
-          <p style="color:#64748B;font-size:11px;">Atendente</p>
+          <p id="sidebar-role-label" style="color:#64748B;font-size:11px;">Atendente</p>
         </div>
       </div>
       <button onclick="handleLogout()" aria-label="Sair" style="padding:6px;border-radius:6px;background:none;border:none;color:#64748B;cursor:pointer;" onmouseenter="this.style.color='#F87171'" onmouseleave="this.style.color='#64748B'">
@@ -254,20 +340,29 @@
     <!-- ═══════════════════════════════════
          PAGE: DASHBOARD
     ═══════════════════════════════════ -->
-    <div id="page-dashboard" class="page active">
+    <div id="page-dashboard" class="page">
       <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
           <div>
             <h1 class="text-xl font-semibold text-slate-800">Dashboard</h1>
             <p class="text-sm text-slate-500 mt-0.5">Visão geral das instalações</p>
           </div>
-          <button onclick="navigate('novo-cliente')"
-            class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-            </svg>
-            <span class="hidden sm:inline">Novo Cliente</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="exportAllData()" id="export-btn"
+              class="px-3 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2 border border-slate-300 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-400 transition-colors cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+              </svg>
+              <span class="hidden sm:inline">Exportar CSV</span>
+            </button>
+            <button onclick="navigate('novo-cliente')"
+              class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+              </svg>
+              <span class="hidden sm:inline">Novo Cliente</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -653,7 +748,7 @@
               <p id="profile-cpf" class="text-xs text-slate-500">CPF: —</p>
             </div>
           </div>
-          <button class="btn-primary px-4 py-2 rounded-lg text-sm font-medium hidden sm:inline-flex items-center gap-2">
+          <button onclick="openEditClientModal()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium hidden sm:inline-flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
             </svg>
@@ -871,26 +966,351 @@
       <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
           <div><h1 class="text-xl font-semibold text-slate-800">Tipos de Película</h1><p class="text-sm text-slate-500 mt-0.5">Catálogo de películas disponíveis</p></div>
-          <button class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+          <button onclick="openNovoTipoModal()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             Novo Tipo
           </button>
         </div>
       </div>
       <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Insulfilm G20</p><p class="text-xs text-slate-500 mt-0.5">Solar · Johnson</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Escurecimento 20% · Rejeição solar básica</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">12 meses</strong></p></div>
-          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Insulfilm G35</p><p class="text-xs text-slate-500 mt-0.5">Solar · Johnson</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Escurecimento 35% · Rejeição solar básica</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">12 meses</strong></p></div>
-          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Película Solar 3M</p><p class="text-xs text-slate-500 mt-0.5">Solar Premium · 3M</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Alta rejeição de calor · Baixa reflexão</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">24 meses</strong></p></div>
-          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Nano Cerâmica Llumar</p><p class="text-xs text-slate-500 mt-0.5">Premium · Llumar</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Tecnologia cerâmica · Máxima rejeição solar</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">36 meses</strong></p></div>
-          <div class="card bg-white rounded-xl border border-slate-200 p-5"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-800">Película de Segurança</p><p class="text-xs text-slate-500 mt-0.5">Segurança · 3M</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span></div><p class="text-xs text-slate-500 mb-3">Anti-estilhaço · Retém fragmentos em impactos</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-600">24 meses</strong></p></div>
-          <div class="card bg-white rounded-xl border border-slate-200 p-5 opacity-60"><div class="flex items-start justify-between mb-3"><div><p class="font-semibold text-slate-700">Película Decorativa</p><p class="text-xs text-slate-500 mt-0.5">Estético · Diversos</p></div><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Inativo</span></div><p class="text-xs text-slate-400 mb-3">Acabamento fosco · Decorativo</p><p class="text-xs text-slate-400">Garantia padrão: <strong class="text-slate-500">6 meses</strong></p></div>
+        <div id="tipos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p class="text-sm text-slate-400 col-span-full">Carregando...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PAGE: USUÁRIOS (admin only)
+    ═══════════════════════════════════ -->
+    <div id="page-usuarios" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-semibold text-slate-800">Usuários</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Gerencie os funcionários com acesso ao sistema</p>
+          </div>
+          <button onclick="openCreateUserModal()"
+            class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+            </svg>
+            <span class="hidden sm:inline">Novo Usuário</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-slate-200 bg-slate-50">
+                <th class="px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Nome / E-mail</th>
+                <th class="px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Perfil</th>
+                <th class="px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</th>
+                <th class="px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="4" class="px-5 py-8 text-center text-slate-400 text-sm">Carregando...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
   </div><!-- end page-top-pad -->
 </main>
+
+<!-- ══════════════════════════════════════════
+     MODAL: CRIAR USUÁRIO (admin only)
+══════════════════════════════════════════ -->
+<div id="modal-criar-usuario" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:white;border-radius:16px;width:100%;max-width:440px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #F1F5F9;">
+      <div style="flex:1;">
+        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Novo Usuário</h2>
+        <p style="font-size:13px;color:#64748B;margin:4px 0 0;">Criar acesso para um funcionário</p>
+      </div>
+      <button type="button" onclick="closeCreateUserModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+        <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div id="create-user-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:#DC2626;"></div>
+
+    <form onsubmit="handleCreateUserSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo</label>
+        <input id="cu-nome" type="text" placeholder="Ex.: Ana Lima"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail <span style="color:#EF4444;">*</span></label>
+        <input id="cu-email" type="email" required placeholder="ana@empresa.com"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Senha <span style="color:#EF4444;">*</span></label>
+        <input id="cu-senha" type="password" required minlength="8" placeholder="Mínimo 8 caracteres"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        <p style="font-size:11px;color:#94A3B8;margin:4px 0 0;">O usuário poderá alterar a senha depois pelo link "Esqueci minha senha".</p>
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Perfil de acesso <span style="color:#EF4444;">*</span></label>
+        <select id="cu-role"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+          <option value="employee">Atendente — apenas busca e cadastro de clientes</option>
+          <option value="admin">Admin — acesso completo + gestão de usuários</option>
+        </select>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;">
+        <button type="button" onclick="closeCreateUserModal()"
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          Cancelar
+        </button>
+        <button type="submit" id="create-user-btn"
+          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
+          </svg>
+          Criar usuário
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL: EDITAR CLIENTE
+══════════════════════════════════════════ -->
+<div id="modal-editar-cliente" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:white;border-radius:16px;width:100%;max-width:600px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;justify-content:between;padding:20px 24px 0;border-bottom:1px solid #F1F5F9;padding-bottom:16px;margin-bottom:0;">
+      <div style="flex:1;">
+        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Editar Cliente</h2>
+        <p id="edit-modal-subtitle" style="font-size:13px;color:#64748B;margin:4px 0 0;">—</p>
+      </div>
+      <button type="button" onclick="closeEditClientModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+        <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div id="edit-client-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:#DC2626;"></div>
+
+    <form onsubmit="handleEditClientSubmit(event)" style="padding:20px 24px 24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+        <div style="grid-column:1/-1;">
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:#EF4444;">*</span></label>
+          <input id="edit-nome" type="text" required
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Telefone / WhatsApp <span style="color:#EF4444;">*</span></label>
+          <input id="edit-tel" type="tel" required maxlength="15" oninput="formatPhone(this)"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
+          <input id="edit-email" type="email"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Data de nascimento</label>
+          <input id="edit-nasc" type="date"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">CEP</label>
+          <div style="display:flex;gap:8px;">
+            <input id="edit-cep" type="text" placeholder="00000-000" maxlength="9" oninput="formatCEP(this)"
+              style="flex:1;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+              onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            <button type="button" onclick="buscarCEPEdit()"
+              style="padding:10px 14px;border:1.5px solid #CBD5E1;border-radius:10px;font-size:13px;color:#475569;background:white;cursor:pointer;white-space:nowrap;font-family:inherit;">
+              Buscar
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Rua / Logradouro</label>
+          <input id="edit-rua" type="text"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Número</label>
+          <input id="edit-num" type="text"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Complemento</label>
+          <input id="edit-comp" type="text"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Bairro</label>
+          <input id="edit-bairro" type="text"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Cidade</label>
+          <input id="edit-cidade" type="text"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Estado (UF)</label>
+          <select id="edit-estado"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+            <option value="">UF</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option>
+            <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
+            <option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option>
+            <option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+            <option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option>
+            <option>SE</option><option>TO</option>
+          </select>
+        </div>
+
+        <div style="grid-column:1/-1;">
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Observações</label>
+          <textarea id="edit-obs" rows="3"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'"></textarea>
+        </div>
+
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
+        <button type="button" onclick="closeEditClientModal()"
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          Cancelar
+        </button>
+        <button type="submit" id="edit-client-btn"
+          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Salvar alterações
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL: NOVO TIPO DE PELÍCULA
+══════════════════════════════════════════ -->
+<div id="modal-novo-tipo" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:white;border-radius:16px;width:100%;max-width:480px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #F1F5F9;">
+      <div style="flex:1;">
+        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Novo Tipo de Película</h2>
+        <p style="font-size:13px;color:#64748B;margin:4px 0 0;">Adicionar ao catálogo</p>
+      </div>
+      <button type="button" onclick="closeNovoTipoModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+        <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div id="novo-tipo-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:#DC2626;"></div>
+
+    <form onsubmit="handleNovoTipoSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome <span style="color:#EF4444;">*</span></label>
+        <input id="nt-nome" type="text" required placeholder="Ex.: Insulfilm G20"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Marca / Fabricante</label>
+          <input id="nt-marca" type="text" placeholder="Ex.: 3M, Llumar"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+        </div>
+        <div>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Categoria</label>
+          <select id="nt-categoria"
+            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+            <option value="">Selecione...</option>
+            <option value="solar">Solar</option>
+            <option value="premium">Premium</option>
+            <option value="segurança">Segurança</option>
+            <option value="decorativo">Decorativo</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Descrição</label>
+        <input id="nt-desc" type="text" placeholder="Ex.: Alta rejeição de calor, baixa reflexão"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Garantia padrão (meses)</label>
+        <input id="nt-garantia" type="number" placeholder="Ex.: 24" min="1" max="120"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+      </div>
+
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#374151;">
+        <input id="nt-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:#0369A1;" />
+        Disponível para novas instalações (Ativo)
+      </label>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;">
+        <button type="button" onclick="closeNovoTipoModal()"
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          Cancelar
+        </button>
+        <button type="submit" id="novo-tipo-btn"
+          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+          Cadastrar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 </div><!-- end app-container -->
 
@@ -908,7 +1328,7 @@
   window.addEventListener('resize', updateTopPad);
 
   // ── Navigation ───────────────────────────
-  const pages = ['dashboard','busca','novo-cliente','perfil','novo-veiculo','veiculo','nova-instalacao','tipos'];
+  const pages = ['dashboard','busca','novo-cliente','perfil','novo-veiculo','veiculo','nova-instalacao','tipos','usuarios'];
 
   function navigate(pageName) {
     pages.forEach(p => {
@@ -1013,8 +1433,14 @@
 
   // ── Listen for auth changes ───────────────
   sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      showLoginPanel();
+      document.getElementById('login-card').style.display  = 'none';
+      document.getElementById('reset-panel').style.display = 'block';
+      return;
+    }
     if (session) showApp(session.user);
-    else          showLogin();
+    else         showLogin();
   });
 
   // ── Login handler ─────────────────────────
@@ -1045,6 +1471,94 @@
   // ── Logout handler ────────────────────────
   async function handleLogout() {
     await sb.auth.signOut();
+  }
+
+  // ── Auth panel switcher helpers ───────────
+  function showLoginPanel() {
+    document.getElementById('login-card').style.display   = 'block';
+    document.getElementById('forgot-panel').style.display = 'none';
+    document.getElementById('reset-panel').style.display  = 'none';
+    document.getElementById('forgot-error').style.display   = 'none';
+    document.getElementById('forgot-success').style.display = 'none';
+    document.getElementById('reset-error').style.display    = 'none';
+  }
+
+  function showForgotPanel() {
+    document.getElementById('login-card').style.display   = 'none';
+    document.getElementById('forgot-panel').style.display = 'block';
+    document.getElementById('reset-panel').style.display  = 'none';
+    document.getElementById('forgot-email').value = '';
+  }
+
+  // ── Forgot password — envia e-mail de recuperação ─
+  async function handleForgotPassword(e) {
+    e.preventDefault();
+    const email  = document.getElementById('forgot-email').value.trim();
+    const btn    = document.getElementById('forgot-btn');
+    const errEl  = document.getElementById('forgot-error');
+    const succEl = document.getElementById('forgot-success');
+    const spinSVG = '<svg style="width:16px;height:16px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+    const sendSVG = '<svg style="width:16px;height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>';
+
+    errEl.style.display  = 'none';
+    succEl.style.display = 'none';
+    btn.disabled  = true;
+    btn.innerHTML = spinSVG + ' Enviando...';
+
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/'
+    });
+
+    btn.disabled  = false;
+    btn.innerHTML = sendSVG + ' Enviar link de recuperação';
+
+    if (error) {
+      errEl.textContent   = 'Erro ao enviar e-mail. Verifique o endereço e tente novamente.';
+      errEl.style.display = 'block';
+      return;
+    }
+    // Supabase retorna sucesso mesmo para e-mails inexistentes (segurança por design).
+    succEl.textContent   = 'Se este e-mail estiver cadastrado, você receberá o link em instantes. Verifique também a caixa de spam.';
+    succEl.style.display = 'block';
+    btn.disabled = true;
+  }
+
+  // ── Password reset — define nova senha ────
+  async function handlePasswordReset(e) {
+    e.preventDefault();
+    const newPw   = document.getElementById('reset-password').value;
+    const confirm = document.getElementById('reset-confirm').value;
+    const btn     = document.getElementById('reset-btn');
+    const errEl   = document.getElementById('reset-error');
+    const spinSVG = '<svg style="width:16px;height:16px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+    const saveSVG = '<svg style="width:16px;height:16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+
+    errEl.style.display = 'none';
+
+    if (newPw !== confirm) {
+      errEl.textContent   = 'As senhas não coincidem. Verifique e tente novamente.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (newPw.length < 8) {
+      errEl.textContent   = 'A senha deve ter pelo menos 8 caracteres.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled  = true;
+    btn.innerHTML = spinSVG + ' Salvando...';
+
+    const { error } = await sb.auth.updateUser({ password: newPw });
+
+    if (error) {
+      errEl.textContent   = 'Erro ao salvar senha: ' + error.message;
+      errEl.style.display = 'block';
+      btn.disabled  = false;
+      btn.innerHTML = saveSVG + ' Salvar nova senha';
+      return;
+    }
+    // Sucesso: onAuthStateChange dispara SIGNED_IN e chama showApp() automaticamente.
   }
 
   // ── Toggle password visibility ────────────
@@ -1084,6 +1598,8 @@
     vehicle:   null,   // veículo selecionado
     installs:  [],     // instalações do veículo selecionado
     filmTypes: [],     // catálogo carregado do Supabase
+    role:      null,   // 'admin' | 'employee'
+    userId:    null,   // UUID do usuário logado
   };
 
   // ════════════════════════════════════════════════════════
@@ -1142,12 +1658,17 @@
   //  CATÁLOGO DE TIPOS DE PELÍCULA
   // ════════════════════════════════════════════════════════
   async function loadFilmTypes() {
-    const { data, error } = await sb.from('film_types').select('id, name, brand, warranty_months').eq('is_active', true).order('name');
+    const { data, error } = await sb
+      .from('film_types')
+      .select('id, name, brand, category, description, warranty_months, is_active')
+      .order('name');
     if (error || !data) return;
     state.filmTypes = data;
+
+    // Dropdown: apenas ativos
     const sel = document.getElementById('film-type');
     sel.innerHTML = '<option value="" disabled selected>Selecione o tipo...</option>';
-    data.forEach(ft => {
+    data.filter(ft => ft.is_active).forEach(ft => {
       const desc = ft.brand ? ` — ${ft.brand}` : '';
       const opt = document.createElement('option');
       opt.value = ft.id;
@@ -1155,6 +1676,36 @@
       opt.dataset.warrantyMonths = ft.warranty_months || '';
       sel.appendChild(opt);
     });
+
+    // Grid da página Tipos de Película: todos (ativos + inativos)
+    renderTiposGrid(data);
+  }
+
+  function renderTiposGrid(types) {
+    const grid = document.getElementById('tipos-grid');
+    if (!grid) return;
+    if (!types || types.length === 0) {
+      grid.innerHTML = '<p class="text-sm text-slate-400 col-span-full">Nenhum tipo cadastrado.</p>';
+      return;
+    }
+    const catLabel = { solar: 'Solar', premium: 'Premium', segurança: 'Segurança', decorativo: 'Decorativo' };
+    grid.innerHTML = types.map(ft => {
+      const active = ft.is_active;
+      const cat    = (catLabel[ft.category] || ft.category || '');
+      const sub    = [cat, ft.brand].filter(Boolean).join(' · ');
+      return `
+        <div class="card bg-white rounded-xl border border-slate-200 p-5${active ? '' : ' opacity-60'}">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <p class="font-semibold ${active ? 'text-slate-800' : 'text-slate-700'}">${ft.name}</p>
+              ${sub ? `<p class="text-xs text-slate-500 mt-0.5">${sub}</p>` : ''}
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">${active ? 'Ativo' : 'Inativo'}</span>
+          </div>
+          ${ft.description ? `<p class="text-xs text-slate-500 mb-3">${ft.description}</p>` : ''}
+          <p class="text-xs text-slate-400">Garantia padrão: <strong class="${active ? 'text-slate-600' : 'text-slate-500'}">${ft.warranty_months ? ft.warranty_months + ' meses' : '—'}</strong></p>
+        </div>`;
+    }).join('');
   }
 
   // ════════════════════════════════════════════════════════
@@ -1684,20 +2235,465 @@
   }
 
   // ════════════════════════════════════════════════════════
+  //  ROLES — carrega perfil e controla visibilidade
+  // ════════════════════════════════════════════════════════
+  async function loadUserProfile(user) {
+    state.userId = user.id;
+
+    const { data: profile } = await sb
+      .from('profiles')
+      .select('role, display_name, is_active')
+      .eq('user_id', user.id)
+      .single();
+
+    state.role = profile?.role || 'employee';
+
+    // Atualiza nome/iniciais se tiver display_name no perfil
+    if (profile?.display_name) {
+      const words    = profile.display_name.trim().split(' ');
+      const initials = words.slice(0,2).map(w => w[0]).join('').toUpperCase();
+      const nameEl   = document.querySelector('#sidebar [style*="white-space:nowrap"]');
+      const initEl   = document.querySelector('#sidebar [style*="font-weight:700"]');
+      if (nameEl) nameEl.textContent = profile.display_name;
+      if (initEl) initEl.textContent = initials;
+    }
+
+    // Atualiza label de role na sidebar
+    const roleEl = document.getElementById('sidebar-role-label');
+    if (roleEl) roleEl.textContent = state.role === 'admin' ? 'Admin' : 'Atendente';
+
+    updateUIForRole();
+
+    // Navega para a página inicial correta
+    await loadFilmTypes();
+    if (state.role === 'admin') {
+      navigate('dashboard');
+    } else {
+      navigate('busca');
+    }
+  }
+
+  function updateUIForRole() {
+    const isAdmin = state.role === 'admin';
+    const show = el => { if (el) el.style.display = ''; };
+    const hide = el => { if (el) el.style.display = 'none'; };
+
+    if (isAdmin) {
+      show(document.getElementById('nav-dashboard'));
+      show(document.getElementById('nav-tipos'));
+      show(document.getElementById('nav-usuarios'));
+      // Botão "Editar" no perfil: visível para admin
+      const editBtn = document.querySelector('#page-perfil .btn-primary.hidden');
+      if (editBtn) editBtn.classList.remove('hidden');
+    } else {
+      hide(document.getElementById('nav-dashboard'));
+      hide(document.getElementById('nav-tipos'));
+      hide(document.getElementById('nav-usuarios'));
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  USUÁRIOS — gestão via Edge Function
+  // ════════════════════════════════════════════════════════
+  async function callEdgeFunction(action, body = {}) {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) throw new Error('Sessão expirada. Faça login novamente.');
+    const { data, error } = await sb.functions.invoke('manage-user', {
+      body: { action, ...body },
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+    if (error) throw new Error(error.message || 'Erro na chamada à função.');
+    return data;
+  }
+
+  async function loadUsers() {
+    const tbody = document.getElementById('users-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400 text-sm">Carregando...</td></tr>';
+    try {
+      const users = await callEdgeFunction('list');
+      if (!users || users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400 text-sm">Nenhum usuário cadastrado.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = users.map(u => {
+        const roleBadge = u.role === 'admin'
+          ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Admin</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">Atendente</span>';
+        const statusBadge = u.is_active
+          ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-600">Inativo</span>';
+        const isMe        = u.user_id === state.userId;
+        const toggleLabel = u.is_active ? 'Desativar' : 'Ativar';
+        const toggleColor = u.is_active ? 'color:#D97706' : 'color:#059669';
+        const safeName    = (u.display_name || u.email).replace(/'/g, "\\'");
+        return `
+          <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+            <td class="px-5 py-3.5">
+              <p class="text-sm font-medium text-slate-800">${u.display_name || '<span class="text-slate-400 italic">Sem nome</span>'}</p>
+              <p class="text-xs text-slate-400 mt-0.5">${u.email}</p>
+            </td>
+            <td class="px-5 py-3.5">${roleBadge}</td>
+            <td class="px-5 py-3.5">${statusBadge}</td>
+            <td class="px-5 py-3.5 text-right whitespace-nowrap">
+              ${isMe
+                ? '<span class="text-xs text-slate-400 italic">Você</span>'
+                : `<button onclick="toggleUserActive('${u.user_id}')" style="font-size:12px;font-weight:500;${toggleColor};background:none;border:none;cursor:pointer;margin-right:12px;">${toggleLabel}</button><button onclick="confirmDeleteUser('${u.user_id}','${safeName}')" style="font-size:12px;font-weight:500;color:#EF4444;background:none;border:none;cursor:pointer;">Excluir</button>`
+              }
+            </td>
+          </tr>`;
+      }).join('');
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="4" class="px-5 py-8 text-center text-red-500 text-sm">Erro ao carregar: ${err.message}</td></tr>`;
+    }
+  }
+
+  function openCreateUserModal() {
+    document.getElementById('cu-nome').value   = '';
+    document.getElementById('cu-email').value  = '';
+    document.getElementById('cu-senha').value  = '';
+    document.getElementById('cu-role').value   = 'employee';
+    document.getElementById('create-user-error').style.display = 'none';
+    document.getElementById('modal-criar-usuario').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCreateUserModal() {
+    document.getElementById('modal-criar-usuario').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function handleCreateUserSubmit(e) {
+    e.preventDefault();
+    const btn   = document.getElementById('create-user-btn');
+    const errEl = document.getElementById('create-user-error');
+    const spinSVG = '<svg style="width:15px;height:15px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+
+    errEl.style.display = 'none';
+    btn.disabled  = true;
+    btn.innerHTML = spinSVG + ' Criando...';
+
+    try {
+      await callEdgeFunction('create', {
+        email:        document.getElementById('cu-email').value.trim(),
+        password:     document.getElementById('cu-senha').value,
+        display_name: document.getElementById('cu-nome').value.trim() || null,
+        role:         document.getElementById('cu-role').value,
+      });
+      closeCreateUserModal();
+      await loadUsers();
+    } catch (err) {
+      errEl.textContent   = err.message.includes('already registered') ? 'Este e-mail já está cadastrado.' : err.message;
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled  = false;
+      btn.innerHTML = '<svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg> Criar usuário';
+    }
+  }
+
+  async function toggleUserActive(userId) {
+    try {
+      await callEdgeFunction('toggle', { user_id: userId });
+      await loadUsers();
+    } catch (err) {
+      alert('Erro: ' + err.message);
+    }
+  }
+
+  async function confirmDeleteUser(userId, name) {
+    if (!confirm(`Excluir o usuário "${name}"?\n\nEsta ação é permanente e não pode ser desfeita.`)) return;
+    try {
+      await callEdgeFunction('delete', { user_id: userId });
+      await loadUsers();
+    } catch (err) {
+      alert('Erro: ' + err.message);
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  MODAL: EDITAR CLIENTE
+  // ════════════════════════════════════════════════════════
+  function openEditClientModal() {
+    const c = state.client;
+    if (!c) return;
+    document.getElementById('edit-modal-subtitle').textContent = 'CPF: ' + fmtCPF(c.cpf);
+    document.getElementById('edit-nome').value    = c.full_name || '';
+    document.getElementById('edit-tel').value     = fmtPhone(c.phone) || '';
+    document.getElementById('edit-email').value   = c.email || '';
+    document.getElementById('edit-nasc').value    = c.birth_date || '';
+    document.getElementById('edit-cep').value     = c.address_zip_code || '';
+    document.getElementById('edit-rua').value     = c.address_street || '';
+    document.getElementById('edit-num').value     = c.address_number || '';
+    document.getElementById('edit-comp').value    = c.address_complement || '';
+    document.getElementById('edit-bairro').value  = c.address_district || '';
+    document.getElementById('edit-cidade').value  = c.address_city || '';
+    document.getElementById('edit-obs').value     = c.notes || '';
+    const estadoSel = document.getElementById('edit-estado');
+    estadoSel.value = c.address_state || '';
+    document.getElementById('edit-client-error').style.display = 'none';
+    const modal = document.getElementById('modal-editar-cliente');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEditClientModal() {
+    document.getElementById('modal-editar-cliente').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function buscarCEPEdit() {
+    const raw = document.getElementById('edit-cep').value.replace(/\D/g, '');
+    if (raw.length !== 8) { alert('CEP deve ter 8 dígitos.'); return; }
+    try {
+      const r = await fetch(`https://viacep.com.br/ws/${raw}/json/`);
+      const d = await r.json();
+      if (d.erro) { alert('CEP não encontrado.'); return; }
+      document.getElementById('edit-rua').value    = d.logradouro || '';
+      document.getElementById('edit-bairro').value = d.bairro || '';
+      document.getElementById('edit-cidade').value = d.localidade || '';
+      document.getElementById('edit-estado').value = d.uf || '';
+      document.getElementById('edit-cep').value    = d.cep || '';
+    } catch { alert('Erro ao consultar o CEP.'); }
+  }
+
+  async function handleEditClientSubmit(e) {
+    e.preventDefault();
+    const c    = state.client;
+    if (!c) return;
+    const btn   = document.getElementById('edit-client-btn');
+    const errEl = document.getElementById('edit-client-error');
+    const spinSVG = '<svg style="width:15px;height:15px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+
+    errEl.style.display = 'none';
+    btn.disabled  = true;
+    btn.innerHTML = spinSVG + ' Salvando...';
+
+    const phone = document.getElementById('edit-tel').value.replace(/\D/g, '');
+    const payload = {
+      full_name:          document.getElementById('edit-nome').value.trim(),
+      phone:              phone || null,
+      email:              document.getElementById('edit-email').value.trim() || null,
+      birth_date:         document.getElementById('edit-nasc').value || null,
+      address_zip_code:   document.getElementById('edit-cep').value.trim() || null,
+      address_street:     document.getElementById('edit-rua').value.trim() || null,
+      address_number:     document.getElementById('edit-num').value.trim() || null,
+      address_complement: document.getElementById('edit-comp').value.trim() || null,
+      address_district:   document.getElementById('edit-bairro').value.trim() || null,
+      address_city:       document.getElementById('edit-cidade').value.trim() || null,
+      address_state:      document.getElementById('edit-estado').value || null,
+      notes:              document.getElementById('edit-obs').value.trim() || null,
+    };
+
+    const { data: updated, error } = await sb
+      .from('clients')
+      .update(payload)
+      .eq('id', c.id)
+      .select()
+      .single();
+
+    btn.disabled  = false;
+    btn.innerHTML = '<svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Salvar alterações';
+
+    if (error) {
+      errEl.textContent   = 'Erro ao salvar: ' + error.message;
+      errEl.style.display = 'block';
+      return;
+    }
+
+    state.client = updated;
+    renderProfile();
+    closeEditClientModal();
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  MODAL: NOVO TIPO DE PELÍCULA
+  // ════════════════════════════════════════════════════════
+  function openNovoTipoModal() {
+    document.getElementById('nt-nome').value      = '';
+    document.getElementById('nt-marca').value     = '';
+    document.getElementById('nt-categoria').value = '';
+    document.getElementById('nt-desc').value      = '';
+    document.getElementById('nt-garantia').value  = '';
+    document.getElementById('nt-ativo').checked   = true;
+    document.getElementById('novo-tipo-error').style.display = 'none';
+    const modal = document.getElementById('modal-novo-tipo');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNovoTipoModal() {
+    document.getElementById('modal-novo-tipo').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function handleNovoTipoSubmit(e) {
+    e.preventDefault();
+    const btn   = document.getElementById('novo-tipo-btn');
+    const errEl = document.getElementById('novo-tipo-error');
+    const spinSVG = '<svg style="width:15px;height:15px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+
+    errEl.style.display = 'none';
+    btn.disabled  = true;
+    btn.innerHTML = spinSVG + ' Cadastrando...';
+
+    const garantia = document.getElementById('nt-garantia').value;
+    const payload = {
+      name:            document.getElementById('nt-nome').value.trim(),
+      brand:           document.getElementById('nt-marca').value.trim() || null,
+      category:        document.getElementById('nt-categoria').value || null,
+      description:     document.getElementById('nt-desc').value.trim() || null,
+      warranty_months: garantia ? parseInt(garantia, 10) : null,
+      is_active:       document.getElementById('nt-ativo').checked,
+    };
+
+    const { error } = await sb.from('film_types').insert(payload);
+
+    btn.disabled  = false;
+    btn.innerHTML = '<svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg> Cadastrar';
+
+    if (error) {
+      errEl.textContent   = error.message.includes('unique') ? 'Já existe um tipo com este nome.' : 'Erro ao cadastrar: ' + error.message;
+      errEl.style.display = 'block';
+      return;
+    }
+
+    closeNovoTipoModal();
+    await loadFilmTypes(); // atualiza dropdown + grid
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  EXPORTAR CSV
+  // ════════════════════════════════════════════════════════
+  function csvEscape(val) {
+    if (val === null || val === undefined) return '';
+    const str = String(val);
+    if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+      return '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+  }
+
+  function arrayToCSV(headers, rows) {
+    const lines = [headers.join(',')];
+    for (const row of rows) lines.push(row.map(csvEscape).join(','));
+    return lines.join('\r\n');
+  }
+
+  function downloadCSV(filename, csvString) {
+    const BOM  = '\uFEFF'; // BOM UTF-8 para Excel reconhecer acentuação no Windows
+    const blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  async function exportAllData() {
+    const btn = document.getElementById('export-btn');
+    const originalHTML = btn.innerHTML;
+    const spinSVG = '<svg style="width:16px;height:16px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+
+    btn.disabled  = true;
+    btn.innerHTML = spinSVG + ' <span class="hidden sm:inline">Exportando...</span>';
+
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+
+      const [
+        { data: clients,       error: err1 },
+        { data: vehicles,      error: err2 },
+        { data: installations, error: err3 },
+      ] = await Promise.all([
+        sb.from('clients').select('*').order('full_name'),
+        sb.from('vehicles').select('*, clients(cpf, full_name)').order('created_at'),
+        sb.from('installations')
+          .select('*, film_types(name), vehicles(plate, brand, model, clients(full_name, cpf))')
+          .order('installed_at', { ascending: false }),
+      ]);
+
+      if (err1 || err2 || err3) throw new Error((err1 || err2 || err3).message);
+
+      // CSV 1: Clientes
+      const clientHeaders = [
+        'id','cpf','full_name','phone','email','birth_date',
+        'address_street','address_number','address_complement',
+        'address_district','address_city','address_state','address_zip_code','created_at'
+      ];
+      const clientRows = (clients || []).map(c => [
+        c.id, c.cpf, c.full_name, c.phone, c.email, c.birth_date,
+        c.address_street, c.address_number, c.address_complement,
+        c.address_district, c.address_city, c.address_state, c.address_zip_code, c.created_at
+      ]);
+      downloadCSV(`clientes_${today}.csv`, arrayToCSV(clientHeaders, clientRows));
+
+      // CSV 2: Veículos
+      await new Promise(r => setTimeout(r, 300));
+      const vehicleHeaders = [
+        'id','client_cpf','client_name','brand','model','year','color','plate','notes','created_at'
+      ];
+      const vehicleRows = (vehicles || []).map(v => [
+        v.id, v.clients?.cpf, v.clients?.full_name,
+        v.brand, v.model, v.year, v.color, v.plate, v.notes, v.created_at
+      ]);
+      downloadCSV(`veiculos_${today}.csv`, arrayToCSV(vehicleHeaders, vehicleRows));
+
+      // CSV 3: Instalações
+      await new Promise(r => setTimeout(r, 300));
+      const installHeaders = [
+        'id','vehicle_plate','vehicle_brand','vehicle_model',
+        'client_name','client_cpf','film_type_name',
+        'installed_at','warranty_until','warranty_months',
+        'status','covered_parts','notes','created_at'
+      ];
+      const installRows = (installations || []).map(inst => [
+        inst.id,
+        inst.vehicles?.plate, inst.vehicles?.brand, inst.vehicles?.model,
+        inst.vehicles?.clients?.full_name, inst.vehicles?.clients?.cpf,
+        inst.film_types?.name,
+        inst.installed_at, inst.warranty_until, inst.warranty_months,
+        inst.status,
+        (inst.covered_parts || []).join(' | '),
+        inst.notes, inst.created_at
+      ]);
+      downloadCSV(`instalacoes_${today}.csv`, arrayToCSV(installHeaders, installRows));
+
+    } catch (err) {
+      alert('Erro ao exportar dados: ' + err.message);
+    } finally {
+      btn.disabled  = false;
+      btn.innerHTML = originalHTML;
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
   //  INIT — carrega dados após login
   // ════════════════════════════════════════════════════════
   const _origShowApp = showApp;
   window.showApp = function(user) {
     _origShowApp(user);
-    loadFilmTypes();
-    loadDashboard();
+    // loadUserProfile carrega o perfil, define o role,
+    // atualiza a sidebar e navega para a página correta
+    loadUserProfile(user);
   };
 
-  // Recarrega dashboard toda vez que o usuário navega para ele
+  // Páginas exclusivas para admin
+  const ADMIN_PAGES = ['dashboard', 'tipos', 'usuarios'];
+
+  // Recarrega dados ao navegar + protege páginas admin
   const _origNavigate2 = navigate;
   navigate = function(page) {
+    // Bloqueia acesso de não-admins às páginas restritas
+    if (ADMIN_PAGES.includes(page) && state.role !== 'admin') {
+      _origNavigate2('busca');
+      return;
+    }
     _origNavigate2(page);
     if (page === 'dashboard') loadDashboard();
+    if (page === 'usuarios')  loadUsers();
   };
 </script>
 </body>
