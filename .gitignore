@@ -1,0 +1,55 @@
+# Node / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
+*.env
+
+# Build outputs
+dist/
+build/
+out/
+.vercel/
+.netlify/
+
+# Editor / IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# SO
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs e temporários
+*.log
+*.tmp
+tmp/
+temp/
+
+# Electron (futuro)
+desktop/dist/
+desktop/out/
+desktop/node_modules/
+
+# Scripts auxiliares temporários (como os da Fase 3)
+/*.js
+!web/**/*.js
+!supabase/**/*.js
+!desktop/**/*.js
+
+# Arquivos sensíveis
+*.pem
+*.key
+credentials.json

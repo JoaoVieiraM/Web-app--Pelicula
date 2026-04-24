@@ -1,0 +1,14 @@
+{
+  "name": "markel-film-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Aplicação web do PeliculaApp — gestão operacional para lojas de instalação de películas automotivas.",
+  "scripts": {
+    "dev": "npx serve . -l 5500",
+    "serve": "npx serve ."
+  },
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  }
+}
