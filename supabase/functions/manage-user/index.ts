@@ -5,8 +5,14 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  })
+}
+
 Deno.serve(async (req) => {
-  // Preflight CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -14,29 +20,31 @@ Deno.serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return new Response('Unauthorized', { status: 401, headers: corsHeaders })
+      return json({ error: 'Unauthorized' }, 401)
     }
 
-    const SUPABASE_URL          = Deno.env.get('SUPABASE_URL')!
-    const SUPABASE_ANON_KEY     = Deno.env.get('SUPABASE_ANON_KEY')!
-    const SUPABASE_SERVICE_KEY  = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const SUPABASE_URL         = Deno.env.get('SUPABASE_URL')!
+    const SUPABASE_ANON_KEY    = Deno.env.get('SUPABASE_ANON_KEY')!
+    const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 
-    // 1. Verifica o JWT do usuário que fez a chamada
-    const token = authHeader.replace('Bearer ', '').trim()
+    // Padrão correto para Edge Functions: injeta o header globalmente
+    // e chama getUser() sem argumento — evita o 401 espúrio
     const callerClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+      global: { headers: { Authorization: authHeader } },
+      auth:   { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     })
-    
-    const { data: { user }, error: authError } = await callerClient.auth.getUser(token)
+
+    const { data: { user }, error: authError } = await callerClient.auth.getUser()
     if (authError || !user) {
-      console.error('[auth.getUser ERROR]:', authError)
-      return new Response(JSON.stringify({ error: authError?.message || 'Unauthorized user' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
+      return json({ error: 'Unauthorized' }, 401)
     }
 
-    // 2. Client com service role (bypassa RLS para operações de admin)
-    const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    // Client com service role — bypassa RLS para operações de admin
+    const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    })
 
-    // 3. Verifica se o usuário tem role = 'admin'
+    // Verifica se o chamador é admin
     const { data: callerProfile } = await adminClient
       .from('profiles')
       .select('role')
@@ -44,72 +52,77 @@ Deno.serve(async (req) => {
       .single()
 
     if (callerProfile?.role !== 'admin') {
-      return new Response('Forbidden', { status: 403, headers: corsHeaders })
+      return json({ error: 'Forbidden' }, 403)
     }
 
-    const body   = await req.json()
-    const { action } = body
+    const body           = await req.json()
+    const { action }     = body
 
-    // ── LIST ────────────────────────────────────────────────
+    // ── LIST ─────────────────────────────────────────────────
     if (action === 'list') {
       const { data: profiles, error } = await adminClient
         .from('profiles')
-        .select('user_id, email, display_name, role, is_active, created_at')
+        .select('user_id, email, display_name, role, is_active, store_id, created_at')
         .order('created_at')
 
       if (error) throw error
-      return new Response(JSON.stringify(profiles), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return json(profiles)
     }
 
-    // ── CREATE ───────────────────────────────────────────────
+    // ── CREATE ────────────────────────────────────────────────
     if (action === 'create') {
-      const { email, password, display_name, role } = body
+      const { email, password, display_name, role, store_id } = body
+
       if (!email || !password) {
-        return new Response(
-          JSON.stringify({ error: 'E-mail e senha são obrigatórios.' }),
-          { status: 400, headers: corsHeaders },
-        )
+        return json({ error: 'E-mail e senha são obrigatórios.' }, 400)
       }
 
       const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
         email,
         password,
-        email_confirm: true, // confirma o e-mail automaticamente
+        email_confirm: true,
       })
 
       if (createError) {
-        return new Response(
-          JSON.stringify({ error: createError.message }),
-          { status: 400, headers: corsHeaders },
-        )
+        return json({ error: createError.message }, 400)
       }
 
       const { error: profileError } = await adminClient.from('profiles').insert({
         user_id:      newUser.user.id,
         email,
         display_name: display_name || null,
-        role:         role || 'employee',
+        role:         role || 'admin',
+        store_id:     store_id || null,
         is_active:    true,
       })
 
       if (profileError) {
-        // Rollback: remove o usuário auth se o perfil falhou
         await adminClient.auth.admin.deleteUser(newUser.user.id)
         throw profileError
       }
 
-      return new Response(JSON.stringify({ success: true }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      // Gera link de primeiro acesso (reset de senha) para o novo admin
+      const origin = req.headers.get('origin') || SUPABASE_URL
+      const { data: linkData } = await adminClient.auth.admin.generateLink({
+        type:    'recovery',
+        email,
+        options: { redirectTo: `${origin}/` },
+      })
+
+      return json({
+        success:      true,
+        user_id:      newUser.user.id,
+        access_link:  linkData?.properties?.action_link ?? null,
       })
     }
 
-    // ── TOGGLE ACTIVE ────────────────────────────────────────
+    // ── TOGGLE ACTIVE ─────────────────────────────────────────
     if (action === 'toggle') {
       const { user_id } = body
-      if (!user_id) {
-        return new Response(JSON.stringify({ error: 'user_id obrigatório.' }), { status: 400, headers: corsHeaders })
+      if (!user_id) return json({ error: 'user_id obrigatório.' }, 400)
+
+      if (user_id === user.id) {
+        return json({ error: 'Não é possível desativar sua própria conta.' }, 400)
       }
 
       const { data: p, error: fetchError } = await adminClient
@@ -118,55 +131,41 @@ Deno.serve(async (req) => {
         .eq('user_id', user_id)
         .single()
 
-      if (fetchError || !p) {
-        return new Response(JSON.stringify({ error: 'Usuário não encontrado.' }), { status: 404, headers: corsHeaders })
-      }
+      if (fetchError || !p) return json({ error: 'Usuário não encontrado.' }, 404)
 
       const newActive = !p.is_active
 
-      // Bane ou desbane no Supabase Auth
       await adminClient.auth.admin.updateUserById(user_id, {
-        ban_duration: newActive ? 'none' : '876600h', // ~100 anos = banido permanentemente
+        ban_duration: newActive ? 'none' : '876600h',
       })
 
-      await adminClient.from('profiles').update({ is_active: newActive }).eq('user_id', user_id)
+      await adminClient
+        .from('profiles')
+        .update({ is_active: newActive })
+        .eq('user_id', user_id)
 
-      return new Response(JSON.stringify({ success: true, is_active: newActive }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return json({ success: true, is_active: newActive })
     }
 
-    // ── DELETE ───────────────────────────────────────────────
+    // ── DELETE (soft) ─────────────────────────────────────────
     if (action === 'delete') {
       const { user_id } = body
-      if (!user_id) {
-        return new Response(JSON.stringify({ error: 'user_id obrigatório.' }), { status: 400, headers: corsHeaders })
-      }
+      if (!user_id) return json({ error: 'user_id obrigatório.' }, 400)
 
-      // Impede o admin de excluir a própria conta
       if (user_id === user.id) {
-        return new Response(
-          JSON.stringify({ error: 'Não é possível excluir sua própria conta.' }),
-          { status: 400, headers: corsHeaders },
-        )
+        return json({ error: 'Não é possível excluir sua própria conta.' }, 400)
       }
 
       const { error: deleteError } = await adminClient.auth.admin.deleteUser(user_id)
       if (deleteError) throw deleteError
-      // O perfil é excluído automaticamente via ON DELETE CASCADE
 
-      return new Response(JSON.stringify({ success: true }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return json({ success: true })
     }
 
     return new Response('Bad Request', { status: 400, headers: corsHeaders })
 
   } catch (err) {
     console.error('[manage-user]', err)
-    return new Response(
-      JSON.stringify({ error: err.message || 'Erro interno.' }),
-      { status: 500, headers: corsHeaders },
-    )
+    return json({ error: err.message || 'Erro interno.' }, 500)
   }
 })

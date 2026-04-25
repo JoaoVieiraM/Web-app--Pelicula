@@ -216,6 +216,7 @@
     storeName: null,   // nome da loja para exibição
     employees: [],     // instaladores carregados (página de gestão)
     installers: [],    // instaladores disponíveis para o formulário de instalação
+    stores:    [],     // lojas carregadas (cache para selects de usuário)
   };
 
   // ════════════════════════════════════════════════════════
@@ -1017,17 +1018,24 @@
   async function loadUsers() {
     const tbody = document.getElementById('users-tbody');
     if (!tbody) return;
-    tbody.innerHTML = '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400 text-sm">Carregando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-slate-400 text-sm">Carregando...</td></tr>';
     try {
+      if (!state.stores.length) {
+        const { data } = await sb.from('stores').select('id, name').eq('is_active', true).order('name');
+        state.stores = data || [];
+      }
       const users = await callEdgeFunction('list');
       if (!users || users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="px-5 py-8 text-center text-slate-400 text-sm">Nenhum usuário cadastrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-slate-400 text-sm">Nenhum usuário cadastrado.</td></tr>';
         return;
       }
       tbody.innerHTML = users.map(u => {
         const roleBadge = u.role === 'admin'
           ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Admin</span>'
           : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">Atendente</span>';
+        const storeName = u.store_name
+          || state.stores.find(s => s.id === u.store_id)?.name
+          || (u.store_id ? '—' : '<span class="text-slate-400 italic text-xs">Nenhuma</span>');
         const statusBadge = u.is_active
           ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Ativo</span>'
           : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-600">Inativo</span>';
@@ -1042,6 +1050,7 @@
               <p class="text-xs text-slate-400 mt-0.5">${u.email}</p>
             </td>
             <td class="px-5 py-3.5">${roleBadge}</td>
+            <td class="px-5 py-3.5 text-sm text-slate-600">${storeName}</td>
             <td class="px-5 py-3.5">${statusBadge}</td>
             <td class="px-5 py-3.5 text-right whitespace-nowrap">
               ${isMe
@@ -1052,16 +1061,31 @@
           </tr>`;
       }).join('');
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="4" class="px-5 py-8 text-center text-red-500 text-sm">Erro ao carregar: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-8 text-center text-red-500 text-sm">Erro ao carregar: ${err.message}</td></tr>`;
     }
   }
 
-  function openCreateUserModal() {
-    document.getElementById('cu-nome').value   = '';
-    document.getElementById('cu-email').value  = '';
-    document.getElementById('cu-senha').value  = '';
-    document.getElementById('cu-role').value   = 'employee';
+  async function openCreateUserModal() {
+    document.getElementById('cu-nome').value  = '';
+    document.getElementById('cu-email').value = '';
+    document.getElementById('cu-role').value  = 'employee';
     document.getElementById('create-user-error').style.display = 'none';
+
+    const sel = document.getElementById('cu-store');
+    sel.innerHTML = '<option value="">Carregando lojas...</option>';
+    try {
+      if (!state.stores.length) {
+        const { data } = await sb.from('stores').select('id, name').eq('is_active', true).order('name');
+        state.stores = data || [];
+      }
+      sel.innerHTML = '<option value="">Nenhuma (opcional para admin)</option>'
+        + state.stores.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    } catch (_) {
+      sel.innerHTML = '<option value="">Erro ao carregar lojas</option>';
+    }
+    sel.value = '';
+
+    onCuRoleChange(document.getElementById('cu-role'));
     document.getElementById('modal-criar-usuario').style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
@@ -1071,25 +1095,70 @@
     document.body.style.overflow = '';
   }
 
+  function onCuRoleChange(sel) {
+    const isEmployee = sel.value === 'employee';
+    document.getElementById('cu-store-required').style.visibility = isEmployee ? 'visible' : 'hidden';
+    document.getElementById('cu-store-hint').textContent = isEmployee
+      ? 'Obrigatório para Atendente.'
+      : 'Admins podem ficar sem loja.';
+    document.getElementById('cu-store').required = isEmployee;
+  }
+
+  function showAccessLinkModal(link, email) {
+    document.getElementById('access-link-email').textContent = `Para: ${email}`;
+    document.getElementById('access-link-input').value = link;
+    document.getElementById('copy-link-btn').textContent = 'Copiar';
+    document.getElementById('modal-access-link').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAccessLinkModal() {
+    document.getElementById('modal-access-link').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function copyAccessLink() {
+    const input = document.getElementById('access-link-input');
+    const btn   = document.getElementById('copy-link-btn');
+    navigator.clipboard.writeText(input.value).then(() => {
+      btn.textContent = 'Copiado!';
+      setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+    }).catch(() => {
+      input.select();
+      document.execCommand('copy');
+    });
+  }
+
   async function handleCreateUserSubmit(e) {
     e.preventDefault();
     const btn   = document.getElementById('create-user-btn');
     const errEl = document.getElementById('create-user-error');
     const spinSVG = '<svg style="width:15px;height:15px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
 
+    const email   = document.getElementById('cu-email').value.trim();
+    const role    = document.getElementById('cu-role').value;
+    const storeId = document.getElementById('cu-store').value || null;
+
+    if (role === 'employee' && !storeId) {
+      errEl.textContent   = 'Selecione a loja para o Atendente.';
+      errEl.style.display = 'block';
+      return;
+    }
+
     errEl.style.display = 'none';
     btn.disabled  = true;
     btn.innerHTML = spinSVG + ' Criando...';
 
     try {
-      await callEdgeFunction('create', {
-        email:        document.getElementById('cu-email').value.trim(),
-        password:     document.getElementById('cu-senha').value,
+      const result = await callEdgeFunction('create', {
+        email,
         display_name: document.getElementById('cu-nome').value.trim() || null,
-        role:         document.getElementById('cu-role').value,
+        role,
+        store_id: storeId,
       });
       closeCreateUserModal();
       await loadUsers();
+      if (result?.access_link) showAccessLinkModal(result.access_link, email);
     } catch (err) {
       errEl.textContent   = err.message.includes('already registered') ? 'Este e-mail já está cadastrado.' : err.message;
       errEl.style.display = 'block';
@@ -1104,7 +1173,11 @@
       await callEdgeFunction('toggle', { user_id: userId });
       await loadUsers();
     } catch (err) {
-      alert('Erro: ' + err.message);
+      const msg = (err.message || '').toLowerCase();
+      const isSelfDeactivate = msg.includes('cannot deactivate') || msg.includes('própria conta') || msg.includes('yourself');
+      alert(isSelfDeactivate
+        ? 'Não é possível desativar a própria conta de admin.'
+        : 'Erro: ' + err.message);
     }
   }
 
