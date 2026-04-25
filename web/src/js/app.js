@@ -214,7 +214,8 @@
     userId:    null,   // UUID do usuário logado
     storeId:   null,   // UUID da loja do usuário
     storeName: null,   // nome da loja para exibição
-    employees: [],     // instaladores carregados
+    employees: [],     // instaladores carregados (página de gestão)
+    installers: [],    // instaladores disponíveis para o formulário de instalação
   };
 
   // ════════════════════════════════════════════════════════
@@ -542,12 +543,23 @@
     if (!v) return;
     state.vehicle = v;
 
-    // load full installations for this vehicle
-    const { data: installs } = await sb
-      .from('installations')
-      .select('*, film_types(name, brand)')
-      .eq('vehicle_id', v.id)
-      .order('installed_at', { ascending: false });
+    let installs;
+    try {
+      const { data, error } = await sb
+        .from('installations')
+        .select('*, film_types(name, brand), employees!installer_id(full_name, photo_url)')
+        .eq('vehicle_id', v.id)
+        .order('installed_at', { ascending: false });
+      if (error) throw error;
+      installs = data;
+    } catch {
+      const { data } = await sb
+        .from('installations')
+        .select('*, film_types(name, brand)')
+        .eq('vehicle_id', v.id)
+        .order('installed_at', { ascending: false });
+      installs = data;
+    }
 
     state.installs = installs || [];
     renderVehicle();
@@ -628,6 +640,21 @@
         footer = `<span>Instalado em ${fmtDate(inst.installed_at)}</span>`;
       }
 
+      const installer     = inst.employees;
+      const installerPhoto = installer?.photo_url;
+      const installerName  = installer?.full_name;
+      const installerInitials = installerName
+        ? installerName.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+        : '';
+      const installerBadge = installerName ? `
+        <div class="flex items-center gap-2 text-xs text-slate-500">
+          ${installerPhoto
+            ? `<img src="${installerPhoto}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;" />`
+            : `<div style="width:20px;height:20px;border-radius:50%;background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#64748B;">${installerInitials}</div>`
+          }
+          <span>${installerName}</span>
+        </div>` : '';
+
       return `
         <div class="timeline-item relative pl-12">
           <div class="absolute left-0 top-0 w-10 h-10 rounded-full ${iconBg} border-2 border-white shadow flex items-center justify-center">
@@ -642,7 +669,10 @@
               ${badge}
             </div>
             ${parts ? `<div class="flex flex-wrap gap-1.5 mb-3">${parts}</div>` : ''}
-            ${footer ? `<div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 border-t border-slate-100 pt-3">${footer}</div>` : ''}
+            <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
+              ${footer ? `<div class="flex flex-wrap items-center gap-4 text-xs text-slate-500">${footer}</div>` : '<div></div>'}
+              ${installerBadge}
+            </div>
           </div>
         </div>`;
     }).join('');
@@ -715,6 +745,14 @@
 
       if (!state.vehicle) { alert('Nenhum veículo selecionado.'); btn.disabled = false; return; }
 
+      const installerId = document.getElementById('installer-id').value || null;
+      if (!installerId) {
+        alert('Selecione o instalador responsável.');
+        btn.disabled = false;
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Registrar Instalação';
+        return;
+      }
+
       const partMap = {
         'Parabrisa':         'parabrisa',
         'Traseiro':          'traseiro',
@@ -741,6 +779,7 @@
       const payload = {
         vehicle_id:      state.vehicle.id,
         film_type_id:    filmTypeId,
+        installer_id:    installerId,
         installed_at:    document.getElementById('install-date').value,
         warranty_months: resolvedWarranty,
         covered_parts:   coveredParts,
@@ -1339,6 +1378,97 @@
   }
 
   // ════════════════════════════════════════════════════════
+  //  CURRENT USER HELPER
+  // ════════════════════════════════════════════════════════
+  function currentUser() {
+    return {
+      userId:    state.userId,
+      role:      state.role,
+      storeId:   state.storeId,
+      storeName: state.storeName,
+    };
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  DROPDOWN DE INSTALADOR — formulário de nova instalação
+  // ════════════════════════════════════════════════════════
+  async function loadInstallersForForm() {
+    const sel = document.getElementById('installer-id');
+    if (!sel) return;
+
+    // Reset form fields ao navegar para a página
+    sel.innerHTML = '<option value="" disabled selected>Carregando instaladores...</option>';
+    document.getElementById('installer-preview')?.classList.add('hidden');
+    const dateEl = document.getElementById('install-date');
+    if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+
+    let query = sb
+      .from('employees')
+      .select('id, full_name, store_id, photo_url, stores(name)')
+      .eq('is_active', true)
+      .order('full_name');
+
+    if (state.role !== 'admin' && state.storeId) {
+      query = query.eq('store_id', state.storeId);
+    }
+
+    const { data, error } = await query;
+
+    sel.innerHTML = '<option value="" disabled selected>Selecione o instalador...</option>';
+
+    if (error || !data || data.length === 0) {
+      const msg = error ? 'Erro ao carregar instaladores' : 'Nenhum instalador ativo cadastrado';
+      sel.innerHTML = `<option value="" disabled selected>${msg}</option>`;
+      state.installers = [];
+      return;
+    }
+
+    state.installers = data;
+
+    if (state.role === 'admin') {
+      const byStore = {};
+      data.forEach(emp => {
+        const key = emp.stores?.name || 'Loja';
+        if (!byStore[key]) byStore[key] = [];
+        byStore[key].push(emp);
+      });
+      Object.entries(byStore).forEach(([storeName, emps]) => {
+        const grp = document.createElement('optgroup');
+        grp.label = storeName;
+        emps.forEach(emp => {
+          const opt = document.createElement('option');
+          opt.value = emp.id;
+          opt.textContent = emp.full_name;
+          grp.appendChild(opt);
+        });
+        sel.appendChild(grp);
+      });
+    } else {
+      data.forEach(emp => {
+        const opt = document.createElement('option');
+        opt.value = emp.id;
+        opt.textContent = emp.full_name;
+        sel.appendChild(opt);
+      });
+    }
+  }
+
+  function onInstallerChange(sel) {
+    const preview  = document.getElementById('installer-preview');
+    const photoEl  = document.getElementById('installer-preview-photo');
+    const nameEl   = document.getElementById('installer-preview-name');
+    const emp      = (state.installers || []).find(e => e.id === sel.value);
+    if (!emp) { preview.classList.add('hidden'); return; }
+
+    const initials = emp.full_name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    photoEl.innerHTML = emp.photo_url
+      ? `<img src="${emp.photo_url}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />`
+      : `<div style="width:36px;height:36px;border-radius:50%;background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#64748B;">${initials}</div>`;
+    nameEl.textContent = emp.full_name;
+    preview.classList.remove('hidden');
+  }
+
+  // ════════════════════════════════════════════════════════
   //  INSTALADORES — CRUD admin
   // ════════════════════════════════════════════════════════
   async function loadEmployees() {
@@ -1539,7 +1669,8 @@
       return;
     }
     _origNavigate2(page);
-    if (page === 'dashboard')    loadDashboard();
-    if (page === 'instaladores') loadEmployees();
-    if (page === 'usuarios')     loadUsers();
+    if (page === 'dashboard')        loadDashboard();
+    if (page === 'nova-instalacao')  loadInstallersForForm();
+    if (page === 'instaladores')     loadEmployees();
+    if (page === 'usuarios')         loadUsers();
   };
