@@ -667,7 +667,14 @@
                 <p class="font-semibold text-slate-800">${name}</p>
                 <p class="text-xs text-slate-500 mt-0.5">${fmtDate(inst.installed_at)}${brand ? ' · ' + brand : ''}</p>
               </div>
-              ${badge}
+              <div class="flex items-center gap-2">
+                ${badge}
+                <button onclick="printInvoice('${inst.id}')" title="Imprimir ficha"
+                  style="padding:5px;border:1px solid #E2E8F0;border-radius:7px;background:white;cursor:pointer;color:#64748B;display:flex;align-items:center;"
+                  onmouseover="this.style.background='#F8FAFC';this.style.color='#0369A1'" onmouseout="this.style.background='white';this.style.color='#64748B'">
+                  <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.056 48.056 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"/></svg>
+                </button>
+              </div>
             </div>
             ${parts ? `<div class="flex flex-wrap gap-1.5 mb-3">${parts}</div>` : ''}
             <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
@@ -677,6 +684,209 @@
           </div>
         </div>`;
     }).join('');
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  FICHA DE INSTALAÇÃO — PDF (Ciclo 8)
+  // ════════════════════════════════════════════════════════
+  function computeFinalTime() {
+    const hi = document.getElementById('hours-in')?.value;
+    const ho = document.getElementById('hours-out')?.value;
+    const display = document.getElementById('final-time-display');
+    if (!display) return;
+    if (!hi || !ho) { display.textContent = ''; return; }
+    const [h1, m1] = hi.split(':').map(Number);
+    const [h2, m2] = ho.split(':').map(Number);
+    const minutes  = (h2 * 60 + m2) - (h1 * 60 + m1);
+    if (minutes <= 0) { display.textContent = ''; return; }
+    display.textContent = `Tempo total: ${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, '0')}`;
+  }
+
+  async function printInvoice(installId) {
+    const inst = state.installs.find(i => i.id === installId);
+    if (!inst) return;
+
+    const v = state.vehicle;
+    const c = state.client;
+
+    if (!state.stores.length) {
+      const { data } = await sb.from('stores').select('id, name, address, phone').eq('is_active', true).order('name');
+      state.stores = data || [];
+    }
+    const store = state.stores.find(s => s.id === inst.store_id)
+      || { name: state.storeName || 'Markel Film', address: '', phone: '' };
+
+    const partLabelMap = {
+      parabrisa:              'Parabrisa',
+      traseiro:               'Traseiro',
+      lateral_dianteiro_esq:  'Lat. Dianteiro Esq.',
+      lateral_dianteiro_dir:  'Lat. Dianteiro Dir.',
+      lateral_traseiro_esq:   'Lat. Traseiro Esq.',
+      lateral_traseiro_dir:   'Lat. Traseiro Dir.',
+      teto_solar:             'Teto Solar',
+    };
+    const parts = (inst.covered_parts || []).map(p => partLabelMap[p] || p);
+
+    const fmtTime    = t => t ? t.slice(0, 5) : '—';
+    const fmtMinutes = m => m ? `${Math.floor(m / 60)}h${String(m % 60).padStart(2, '0')}` : '—';
+
+    const invoiceNum = inst.invoice_number
+      ? String(inst.invoice_number).padStart(6, '0')
+      : 'S/N';
+    const payMethod      = inst.payment_method  || '—';
+    const includesRemoval = inst.includes_removal ? 'Sim' : 'Não';
+    const installerName  = inst.employees?.full_name || '—';
+    const filmName       = inst.film_types?.name  || '—';
+    const filmBrand      = inst.film_types?.brand ? ' · ' + inst.film_types.brand : '';
+
+    const pdfName = `ficha_${inst.invoice_number || 'sem-numero'}_${inst.installed_at}.pdf`;
+
+    // Estilos reutilizados inline (evita dependência de invoice.css no html2canvas)
+    const S = {
+      page:        'font-family:Arial,sans-serif;font-size:13px;line-height:1.5;color:#0F172A;background:#fff;width:794px;padding:40px 48px;box-sizing:border-box;',
+      header:      'display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:18px;border-bottom:3px solid #0369A1;',
+      brandName:   'font-size:24px;font-weight:800;color:#0369A1;letter-spacing:-0.5px;',
+      brandSub:    'font-size:11px;color:#64748B;margin-top:2px;',
+      storeBox:    'text-align:right;font-size:12px;color:#475569;',
+      storeStrong: 'display:block;color:#0F172A;font-size:13px;font-weight:600;margin-bottom:2px;',
+      titleWrap:   'text-align:center;margin-bottom:16px;',
+      titleH1:     'font-size:15px;font-weight:700;color:#0369A1;letter-spacing:2px;text-transform:uppercase;margin:0 0 3px;',
+      titleNum:    'font-size:13px;color:#64748B;',
+      meta:        'display:flex;justify-content:space-around;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:12px 16px;margin-bottom:18px;',
+      metaItem:    'text-align:center;flex:1;padding:0 8px;',
+      metaLabel:   'font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:#64748B;font-weight:700;',
+      metaValue:   'font-size:14px;font-weight:700;color:#0369A1;margin-top:2px;',
+      section:     'margin-bottom:14px;',
+      secTitle:    'font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#475569;background:#F1F5F9;border:1px solid #E2E8F0;border-bottom:none;border-radius:6px 6px 0 0;padding:6px 12px;',
+      secBody:     'border:1px solid #E2E8F0;border-radius:0 0 6px 6px;padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;',
+      secBodyFull: 'border:1px solid #E2E8F0;border-radius:0 0 6px 6px;padding:12px 14px;',
+      fLabel:      'font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:2px;',
+      fValue:      'font-size:13px;color:#0F172A;font-weight:500;',
+      span2:       'grid-column:1/-1;',
+      parts:       'display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;',
+      chip:        'background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;padding:2px 10px;font-size:11px;color:#1D4ED8;font-weight:500;',
+      warranty:    'display:flex;align-items:center;gap:16px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:8px;padding:14px 18px;margin-bottom:14px;',
+      wLabel:      'font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:#16A34A;font-weight:700;',
+      wDate:       'font-size:20px;font-weight:800;color:#15803D;line-height:1.2;',
+      wPeriod:     'font-size:11px;color:#166534;margin-top:1px;',
+      sigs:        'display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:28px;',
+      sigLine:     'border-top:1px solid #334155;padding-top:8px;text-align:center;font-size:11px;color:#475569;',
+      footer:      'margin-top:24px;text-align:center;font-size:10px;color:#94A3B8;border-top:1px solid #E2E8F0;padding-top:10px;',
+    };
+
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;top:0;left:0;width:794px;opacity:0;pointer-events:none;z-index:-9999;';
+    el.innerHTML = `
+      <div style="${S.page}">
+        <div style="${S.header}">
+          <div>
+            <div style="${S.brandName}">MARKEL FILM</div>
+            <div style="${S.brandSub}">Películas Automotivas</div>
+          </div>
+          <div style="${S.storeBox}">
+            <span style="${S.storeStrong}">${store.name}</span>
+            ${store.address ? store.address + '<br>' : ''}
+            ${store.phone   ? 'Tel: ' + store.phone  : ''}
+          </div>
+        </div>
+
+        <div style="${S.titleWrap}">
+          <div style="${S.titleH1}">Ficha de Instalação</div>
+          <div style="${S.titleNum}">Nº ${invoiceNum}</div>
+        </div>
+
+        <div style="${S.meta}">
+          <div style="${S.metaItem}">
+            <div style="${S.metaLabel}">Data</div>
+            <div style="${S.metaValue}">${fmtDate(inst.installed_at)}</div>
+          </div>
+          <div style="${S.metaItem}border-left:1px solid #BAE6FD;">
+            <div style="${S.metaLabel}">Entrada</div>
+            <div style="${S.metaValue}">${fmtTime(inst.hours_in)}</div>
+          </div>
+          <div style="${S.metaItem}border-left:1px solid #BAE6FD;">
+            <div style="${S.metaLabel}">Saída</div>
+            <div style="${S.metaValue}">${fmtTime(inst.hours_out)}</div>
+          </div>
+          <div style="${S.metaItem}border-left:1px solid #BAE6FD;">
+            <div style="${S.metaLabel}">Tempo Total</div>
+            <div style="${S.metaValue}">${fmtMinutes(inst.final_time)}</div>
+          </div>
+        </div>
+
+        <div style="${S.section}">
+          <div style="${S.secTitle}">Dados do Cliente</div>
+          <div style="${S.secBody}">
+            <div><div style="${S.fLabel}">Nome</div><div style="${S.fValue}">${c?.full_name || '—'}</div></div>
+            <div><div style="${S.fLabel}">CPF</div><div style="${S.fValue}">${c?.cpf ? fmtCPF(c.cpf) : '—'}</div></div>
+            <div><div style="${S.fLabel}">Telefone</div><div style="${S.fValue}">${c?.phone ? fmtPhone(c.phone) : '—'}</div></div>
+            <div><div style="${S.fLabel}">E-mail</div><div style="${S.fValue}">${c?.email || '—'}</div></div>
+          </div>
+        </div>
+
+        <div style="${S.section}">
+          <div style="${S.secTitle}">Dados do Veículo</div>
+          <div style="${S.secBody}">
+            <div><div style="${S.fLabel}">Veículo</div><div style="${S.fValue}">${v?.brand || ''} ${v?.model || ''} ${v?.year || ''}</div></div>
+            <div><div style="${S.fLabel}">Placa</div><div style="${S.fValue}">${v?.plate || '—'}</div></div>
+            <div><div style="${S.fLabel}">Cor</div><div style="${S.fValue}">${v?.color || '—'}</div></div>
+          </div>
+        </div>
+
+        <div style="${S.section}">
+          <div style="${S.secTitle}">Serviço Realizado</div>
+          <div style="${S.secBody}">
+            <div><div style="${S.fLabel}">Película</div><div style="${S.fValue}">${filmName}${filmBrand}</div></div>
+            <div><div style="${S.fLabel}">Instalador</div><div style="${S.fValue}">${installerName}</div></div>
+            <div><div style="${S.fLabel}">Forma de Pagamento</div><div style="${S.fValue}">${payMethod}</div></div>
+            <div><div style="${S.fLabel}">Remoção Incluída</div><div style="${S.fValue}">${includesRemoval}</div></div>
+            <div style="${S.span2}">
+              <div style="${S.fLabel}">Vidros Cobertos</div>
+              <div style="${S.parts}">${parts.map(p => `<span style="${S.chip}">${p}</span>`).join('')}</div>
+            </div>
+            ${inst.notes ? `<div style="${S.span2}"><div style="${S.fLabel}">Observações</div><div style="${S.fValue}">${inst.notes}</div></div>` : ''}
+          </div>
+        </div>
+
+        ${inst.warranty_until ? `
+        <div style="${S.warranty}">
+          <svg width="36" height="36" fill="none" stroke="#16A34A" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+          </svg>
+          <div>
+            <div style="${S.wLabel}">Garantia Válida Até</div>
+            <div style="${S.wDate}">${fmtDate(inst.warranty_until)}</div>
+            ${inst.warranty_months ? `<div style="${S.wPeriod}">${inst.warranty_months} meses de garantia</div>` : ''}
+          </div>
+        </div>` : ''}
+
+        <div style="${S.sigs}">
+          <div style="text-align:center;"><div style="height:40px;"></div><div style="${S.sigLine}">Assinatura do Cliente</div></div>
+          <div style="text-align:center;"><div style="height:40px;"></div><div style="${S.sigLine}">Responsável pela Instalação</div></div>
+        </div>
+
+        <div style="${S.footer}">
+          Markel Film — Documento gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(el);
+
+    try {
+      await html2pdf()
+        .set({
+          margin:      0,
+          filename:    pdfName,
+          image:       { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .from(el.firstElementChild)
+        .save();
+    } finally {
+      document.body.removeChild(el);
+    }
   }
 
   // ════════════════════════════════════════════════════════
@@ -777,14 +987,29 @@
         if (ft) resolvedWarranty = ft.warranty_months;
       }
 
+      const hoursIn  = document.getElementById('hours-in').value  || null;
+      const hoursOut = document.getElementById('hours-out').value || null;
+      let finalTime  = null;
+      if (hoursIn && hoursOut) {
+        const [h1, m1] = hoursIn.split(':').map(Number);
+        const [h2, m2] = hoursOut.split(':').map(Number);
+        const diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+        if (diff > 0) finalTime = diff;
+      }
+
       const payload = {
-        vehicle_id:      state.vehicle.id,
-        film_type_id:    filmTypeId,
-        installer_id:    installerId,
-        installed_at:    document.getElementById('install-date').value,
-        warranty_months: resolvedWarranty,
-        covered_parts:   coveredParts,
-        notes:           document.getElementById('notes').value.trim() || null,
+        vehicle_id:       state.vehicle.id,
+        film_type_id:     filmTypeId,
+        installer_id:     installerId,
+        installed_at:     document.getElementById('install-date').value,
+        warranty_months:  resolvedWarranty,
+        covered_parts:    coveredParts,
+        notes:            document.getElementById('notes').value.trim() || null,
+        payment_method:   document.getElementById('payment-method').value  || null,
+        includes_removal: document.getElementById('includes-removal').checked,
+        hours_in:         hoursIn,
+        hours_out:        hoursOut,
+        final_time:       finalTime,
       };
 
       const { error } = await sb.from('installations').insert(payload);
@@ -1474,6 +1699,16 @@
     document.getElementById('installer-preview')?.classList.add('hidden');
     const dateEl = document.getElementById('install-date');
     if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+    const pmEl = document.getElementById('payment-method');
+    if (pmEl) pmEl.value = '';
+    const remEl = document.getElementById('includes-removal');
+    if (remEl) remEl.checked = false;
+    const hiEl = document.getElementById('hours-in');
+    if (hiEl) hiEl.value = '';
+    const hoEl = document.getElementById('hours-out');
+    if (hoEl) hoEl.value = '';
+    const ftEl = document.getElementById('final-time-display');
+    if (ftEl) ftEl.textContent = '';
 
     let query = sb
       .from('employees')

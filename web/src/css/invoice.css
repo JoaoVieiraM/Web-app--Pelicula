@@ -1,0 +1,248 @@
+/* Ficha de Instalação — Markel Film
+   Escopo: todas as regras prefixadas com .invoice-page
+   Não afeta a interface do app */
+
+.invoice-page {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #0F172A;
+  background: #ffffff;
+  width: 794px;
+  min-height: 1123px;
+  padding: 40px 48px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* ── Cabeçalho ─────────────────────────────── */
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 3px solid #0369A1;
+}
+
+.invoice-brand-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0369A1;
+  letter-spacing: -0.5px;
+}
+
+.invoice-brand-sub {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.invoice-store {
+  text-align: right;
+  font-size: 12px;
+  color: #475569;
+}
+
+.invoice-store strong {
+  display: block;
+  color: #0F172A;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+/* ── Título do documento ────────────────────── */
+.invoice-title {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.invoice-title h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0369A1;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 3px;
+}
+
+.invoice-title .invoice-doc-number {
+  font-size: 13px;
+  color: #64748B;
+}
+
+/* ── Barra de metadados ─────────────────────── */
+.invoice-meta {
+  display: flex;
+  justify-content: space-around;
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+}
+
+.invoice-meta-item {
+  text-align: center;
+  flex: 1;
+}
+
+.invoice-meta-item:not(:last-child) {
+  border-right: 1px solid #BAE6FD;
+}
+
+.invoice-meta-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #64748B;
+  font-weight: 700;
+}
+
+.invoice-meta-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0369A1;
+  margin-top: 2px;
+}
+
+/* ── Seções ─────────────────────────────────── */
+.invoice-section {
+  margin-bottom: 14px;
+}
+
+.invoice-section-title {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #475569;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 12px;
+}
+
+.invoice-section-body {
+  border: 1px solid #E2E8F0;
+  border-radius: 0 0 6px 6px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+
+.invoice-section-body.cols-1 {
+  grid-template-columns: 1fr;
+}
+
+.invoice-field-label {
+  font-size: 9px;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.invoice-field-value {
+  font-size: 13px;
+  color: #0F172A;
+  font-weight: 500;
+}
+
+.invoice-field-span {
+  grid-column: 1 / -1;
+}
+
+/* ── Chips de partes cobertas ───────────────── */
+.invoice-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.invoice-part-chip {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 11px;
+  color: #1D4ED8;
+  font-weight: 500;
+}
+
+/* ── Banner de garantia ─────────────────────── */
+.invoice-warranty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #F0FDF4;
+  border: 1.5px solid #86EFAC;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+
+.invoice-warranty svg {
+  flex-shrink: 0;
+  color: #16A34A;
+}
+
+.invoice-warranty-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #16A34A;
+  font-weight: 700;
+}
+
+.invoice-warranty-date {
+  font-size: 20px;
+  font-weight: 800;
+  color: #15803D;
+  line-height: 1.2;
+}
+
+.invoice-warranty-period {
+  font-size: 11px;
+  color: #166534;
+  margin-top: 1px;
+}
+
+/* ── Assinaturas ────────────────────────────── */
+.invoice-signatures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 28px;
+  padding-top: 0;
+}
+
+.invoice-signature-block {
+  text-align: center;
+}
+
+.invoice-signature-line {
+  border-top: 1px solid #334155;
+  padding-top: 8px;
+  font-size: 11px;
+  color: #475569;
+}
+
+/* ── Rodapé ─────────────────────────────────── */
+.invoice-footer {
+  position: absolute;
+  bottom: 28px;
+  left: 48px;
+  right: 48px;
+  text-align: center;
+  font-size: 10px;
+  color: #94A3B8;
+  border-top: 1px solid #E2E8F0;
+  padding-top: 10px;
+}
