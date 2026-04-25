@@ -66,6 +66,10 @@
             </button>
           </div>
         </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:-4px;">
+          <input type="checkbox" id="login-remember" checked style="width:15px;height:15px;accent-color:#0369A1;cursor:pointer;" />
+          <label for="login-remember" style="font-size:12px;color:#64748B;cursor:pointer;user-select:none;">Manter conectado</label>
+        </div>
         <button type="submit" id="login-btn"
           style="width:100%;padding:12px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:background-color 150ms ease;"
           onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
@@ -225,6 +229,13 @@
       Tipos de Película
     </button>
 
+    <button id="nav-instaladores" onclick="navigate('instaladores')" data-page="instaladores" class="sidebar-link" style="margin-top:4px;display:none;">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/>
+      </svg>
+      Instaladores
+    </button>
+
     <button id="nav-usuarios" onclick="navigate('usuarios')" data-page="usuarios" class="sidebar-link" style="margin-top:4px;display:none;">
       <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
@@ -243,6 +254,7 @@
         <div style="min-width:0;">
           <p style="color:white;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Rafael Fontes</p>
           <p id="sidebar-role-label" style="color:#64748B;font-size:11px;">Atendente</p>
+          <p id="sidebar-store-name" style="color:#38BDF8;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;"></p>
         </div>
       </div>
       <button onclick="handleLogout()" aria-label="Sair" style="padding:6px;border-radius:6px;background:none;border:none;color:#64748B;cursor:pointer;" onmouseenter="this.style.color='#F87171'" onmouseleave="this.style.color='#64748B'">
@@ -526,7 +538,9 @@
                   <label for="nc-cpf" class="block text-sm font-medium text-slate-700 mb-1.5">CPF <span class="text-red-500">*</span></label>
                   <input id="nc-cpf" type="text" required placeholder="000.000.000-00" maxlength="14"
                     oninput="formatCPF(this)"
+                    onblur="validateCPFField(this)"
                     class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                  <span id="nc-cpf-error" class="hidden text-xs text-red-500 mt-1">CPF inválido</span>
                 </div>
 
                 <div>
@@ -941,6 +955,32 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════
+         PAGE: INSTALADORES (admin only)
+    ═══════════════════════════════════ -->
+    <div id="page-instaladores" class="page">
+      <div class="bg-white border-b border-slate-200 px-4 md:px-6 lg:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-semibold text-slate-800">Instaladores</h1>
+            <p class="text-sm text-slate-500 mt-0.5">Gerencie os instaladores de cada loja</p>
+          </div>
+          <button onclick="openFuncionarioModal(null)"
+            class="btn-primary px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            <span class="hidden sm:inline">Novo Instalador</span>
+          </button>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <div id="employees-list">
+          <p class="text-sm text-slate-400 py-8 text-center">Carregando...</p>
+        </div>
+      </div>
+    </div>
+
   </div><!-- end page-top-pad -->
 </main>
 
@@ -1229,6 +1269,88 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
           </svg>
           Cadastrar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL: INSTALADOR (criar / editar)
+══════════════════════════════════════════ -->
+<div id="modal-funcionario" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:white;border-radius:16px;width:100%;max-width:480px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #F1F5F9;">
+      <div style="flex:1;">
+        <h2 id="func-modal-title" style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Novo Instalador</h2>
+        <p style="font-size:13px;color:#64748B;margin:4px 0 0;">Preencha os dados do instalador</p>
+      </div>
+      <button type="button" onclick="closeFuncionarioModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+        <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div id="func-modal-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:#DC2626;"></div>
+
+    <form onsubmit="handleFuncionarioSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
+      <input type="hidden" id="func-id" />
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:#EF4444;">*</span></label>
+        <input id="func-nome" type="text" required placeholder="Ex.: Carlos Oliveira"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span style="color:#EF4444;">*</span></label>
+        <select id="func-loja" required
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+          <option value="" disabled selected>Selecione a loja...</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Data de contratação</label>
+        <input id="func-data" type="date"
+          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+      </div>
+
+      <div>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Foto</label>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="func-foto-preview" style="width:48px;height:48px;border-radius:50%;background:#F1F5F9;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <svg style="width:20px;height:20px;color:#CBD5E1;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          </div>
+          <div>
+            <label for="func-foto-input" style="display:inline-block;padding:8px 14px;font-size:13px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:8px;background:white;cursor:pointer;font-family:inherit;">
+              Escolher foto
+            </label>
+            <input id="func-foto-input" type="file" accept="image/*" style="display:none;" onchange="previewFuncPhoto(this)" />
+            <p style="font-size:11px;color:#94A3B8;margin:4px 0 0;">JPG ou PNG até 2 MB. Opcional.</p>
+          </div>
+        </div>
+      </div>
+
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#374151;">
+        <input id="func-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:#0369A1;" />
+        Instalador ativo (disponível para novas instalações)
+      </label>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;">
+        <button type="button" onclick="closeFuncionarioModal()"
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          Cancelar
+        </button>
+        <button type="submit" id="func-submit-btn"
+          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Salvar
         </button>
       </div>
     </form>

@@ -1,7 +1,13 @@
 // ── Supabase client ──────────────────────
   const SUPA_URL = 'https://bsewiosciksmlzndvnro.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZXdpb3NjaWtzbWx6bmR2bnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU5ODYsImV4cCI6MjA5MjIxMTk4Nn0.A281sBioDuT1f9oy12e5P-JJb4DWVnGgEkS6WPrJ08w';
-  const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+  const sb = supabase.createClient(SUPA_URL, SUPA_KEY, {
+    auth: {
+      persistSession:   true,
+      autoRefreshToken: true,
+      storageKey:       'markel_session',
+    }
+  });
   window.supabase = sb;
 
   // ── Auth helpers ─────────────────────────
@@ -56,7 +62,12 @@
     btn.disabled = true;
     btn.innerHTML = '<svg class="animate-spin" style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Entrando...';
 
+    const remember = document.getElementById('login-remember')?.checked ?? true;
     const { error } = await sb.auth.signInWithPassword({ email, password });
+
+    if (!error && !remember) {
+      localStorage.removeItem('markel_session');
+    }
 
     if (error) {
       let msg = 'Credenciais inválidas. Verifique e-mail e senha.';
@@ -201,6 +212,9 @@
     filmTypes: [],     // catálogo carregado do Supabase
     role:      null,   // 'admin' | 'employee'
     userId:    null,   // UUID do usuário logado
+    storeId:   null,   // UUID da loja do usuário
+    storeName: null,   // nome da loja para exibição
+    employees: [],     // instaladores carregados
   };
 
   // ════════════════════════════════════════════════════════
@@ -209,6 +223,36 @@
   function fmtCPF(cpf) {
     const d = (cpf || '').replace(/\D/g, '');
     return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  }
+  function isValidCPF(cpf) {
+    const d = (cpf || '').replace(/\D/g, '');
+    if (d.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(d)) return false;
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += +d[i] * (10 - i);
+    let r = (sum * 10) % 11;
+    if (r === 10 || r === 11) r = 0;
+    if (r !== +d[9]) return false;
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += +d[i] * (11 - i);
+    r = (sum * 10) % 11;
+    if (r === 10 || r === 11) r = 0;
+    return r === +d[10];
+  }
+  function validateCPFField(input) {
+    const errEl = document.getElementById('nc-cpf-error');
+    const btn   = document.getElementById('new-client-btn');
+    const valid = isValidCPF(input.value);
+    if (valid) {
+      input.classList.remove('border-red-500', 'focus:ring-red-500');
+      input.classList.add('border-slate-300');
+      if (errEl) errEl.classList.add('hidden');
+    } else {
+      input.classList.add('border-red-500', 'focus:ring-red-500');
+      input.classList.remove('border-slate-300');
+      if (errEl) errEl.classList.remove('hidden');
+    }
+    if (btn) btn.disabled = !valid;
   }
   function fmtPhone(p) {
     const d = (p || '').replace(/\D/g, '');
@@ -617,6 +661,12 @@
       btn.innerHTML = spinSVG + ' Cadastrando...';
 
       const cpfRaw = document.getElementById('nc-cpf').value.replace(/\D/g,'');
+      if (!isValidCPF(cpfRaw)) {
+        validateCPFField(document.getElementById('nc-cpf'));
+        btn.disabled = false;
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/></svg> Cadastrar Cliente';
+        return;
+      }
       const payload = {
         full_name:          document.getElementById('nc-nome').value.trim(),
         cpf:                cpfRaw,
@@ -843,11 +893,27 @@
 
     const { data: profile } = await sb
       .from('profiles')
-      .select('role, display_name, is_active')
+      .select('role, display_name, is_active, store_id')
       .eq('user_id', user.id)
       .single();
 
-    state.role = profile?.role || 'employee';
+    state.role    = profile?.role    || 'employee';
+    state.storeId = profile?.store_id || null;
+
+    if (state.storeId) {
+      const { data: store } = await sb
+        .from('stores')
+        .select('name')
+        .eq('id', state.storeId)
+        .single();
+      state.storeName = store?.name || null;
+    }
+
+    const storeEl = document.getElementById('sidebar-store-name');
+    if (storeEl) {
+      storeEl.textContent  = state.storeName || '';
+      storeEl.style.display = state.storeName ? '' : 'none';
+    }
 
     // Atualiza nome/iniciais se tiver display_name no perfil
     if (profile?.display_name) {
@@ -882,6 +948,7 @@
     if (isAdmin) {
       show(document.getElementById('nav-dashboard'));
       show(document.getElementById('nav-tipos'));
+      show(document.getElementById('nav-instaladores'));
       show(document.getElementById('nav-usuarios'));
       // Botão "Editar" no perfil: visível para admin
       const editBtn = document.querySelector('#page-perfil .btn-primary.hidden');
@@ -889,6 +956,7 @@
     } else {
       hide(document.getElementById('nav-dashboard'));
       hide(document.getElementById('nav-tipos'));
+      hide(document.getElementById('nav-instaladores'));
       hide(document.getElementById('nav-usuarios'));
     }
   }
@@ -1271,6 +1339,184 @@
   }
 
   // ════════════════════════════════════════════════════════
+  //  INSTALADORES — CRUD admin
+  // ════════════════════════════════════════════════════════
+  async function loadEmployees() {
+    const container = document.getElementById('employees-list');
+    if (!container) return;
+    container.innerHTML = '<p class="text-sm text-slate-400 py-8 text-center">Carregando...</p>';
+
+    const { data, error } = await sb
+      .from('employees')
+      .select('*, stores(name)')
+      .order('full_name');
+
+    if (error) {
+      container.innerHTML = `<p class="text-sm text-red-500 py-8 text-center">Erro ao carregar: ${error.message}</p>`;
+      return;
+    }
+
+    state.employees = data || [];
+
+    if (state.employees.length === 0) {
+      container.innerHTML = '<p class="text-sm text-slate-400 py-8 text-center">Nenhum instalador cadastrado. Clique em "Novo Instalador" para começar.</p>';
+      return;
+    }
+
+    const byStore = {};
+    state.employees.forEach(emp => {
+      const key = emp.store_id;
+      if (!byStore[key]) byStore[key] = { name: emp.stores?.name || 'Loja desconhecida', emps: [] };
+      byStore[key].emps.push(emp);
+    });
+
+    container.innerHTML = Object.values(byStore).map(group => `
+      <div class="mb-8">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">${group.name}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          ${group.emps.map(emp => renderEmployeeCard(emp)).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderEmployeeCard(emp) {
+    const active   = emp.is_active;
+    const hired    = emp.hired_at ? fmtDate(emp.hired_at) : '—';
+    const initials = emp.full_name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    const photo    = emp.photo_url
+      ? `<img src="${emp.photo_url}" alt="${emp.full_name}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;" />`
+      : `<div style="width:40px;height:40px;border-radius:50%;background:#E2E8F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:600;color:#64748B;">${initials}</div>`;
+    const toggleLabel = active ? 'Inativar' : 'Ativar';
+    const toggleColor = active ? '#D97706' : '#059669';
+    return `
+      <div class="card bg-white rounded-xl border border-slate-200 p-4${active ? '' : ' opacity-60'}">
+        <div class="flex items-start gap-3">
+          ${photo}
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-2">
+              <p class="font-medium text-slate-800 text-sm leading-tight">${emp.full_name}</p>
+              <span class="flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">${active ? 'Ativo' : 'Inativo'}</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Contratado: ${hired}</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-4 mt-3 pt-3 border-t border-slate-100">
+          <button onclick="openFuncionarioModal('${emp.id}')" style="font-size:12px;font-weight:500;color:#0369A1;background:none;border:none;cursor:pointer;">Editar</button>
+          <button onclick="toggleEmployeeActive('${emp.id}', ${active})" style="font-size:12px;font-weight:500;color:${toggleColor};background:none;border:none;cursor:pointer;">${toggleLabel}</button>
+        </div>
+      </div>`;
+  }
+
+  async function openFuncionarioModal(empId) {
+    const emp       = empId ? (state.employees || []).find(e => e.id === empId) : null;
+    const titleEl   = document.getElementById('func-modal-title');
+    const errEl     = document.getElementById('func-modal-error');
+    const previewEl = document.getElementById('func-foto-preview');
+    const iconSVG   = '<svg style="width:20px;height:20px;color:#CBD5E1;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>';
+
+    document.getElementById('func-id').value         = emp?.id       || '';
+    document.getElementById('func-nome').value       = emp?.full_name || '';
+    document.getElementById('func-data').value       = emp?.hired_at  || '';
+    document.getElementById('func-ativo').checked    = emp ? emp.is_active : true;
+    document.getElementById('func-foto-input').value = '';
+    titleEl.textContent  = emp ? 'Editar Instalador' : 'Novo Instalador';
+    errEl.style.display  = 'none';
+    previewEl.innerHTML  = emp?.photo_url
+      ? `<img src="${emp.photo_url}" style="width:100%;height:100%;object-fit:cover;" />`
+      : iconSVG;
+
+    const sel = document.getElementById('func-loja');
+    sel.innerHTML = '<option value="" disabled>Carregando...</option>';
+    const { data: stores } = await sb.from('stores').select('id, name').eq('is_active', true).order('name');
+    sel.innerHTML = `<option value="" disabled${emp ? '' : ' selected'}>Selecione a loja...</option>`;
+    (stores || []).forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name;
+      if (s.id === emp?.store_id) opt.selected = true;
+      sel.appendChild(opt);
+    });
+
+    document.getElementById('modal-funcionario').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFuncionarioModal() {
+    document.getElementById('modal-funcionario').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function previewFuncPhoto(input) {
+    const file = input.files?.[0];
+    if (!file) return;
+    const previewEl = document.getElementById('func-foto-preview');
+    const reader    = new FileReader();
+    reader.onload   = e => { previewEl.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;" />`; };
+    reader.readAsDataURL(file);
+  }
+
+  async function handleFuncionarioSubmit(e) {
+    e.preventDefault();
+    const btn     = document.getElementById('func-submit-btn');
+    const errEl   = document.getElementById('func-modal-error');
+    const spinSVG = '<svg style="width:15px;height:15px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
+    const saveSVG = '<svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+
+    errEl.style.display = 'none';
+    btn.disabled  = true;
+    btn.innerHTML = spinSVG + ' Salvando...';
+
+    const empId    = document.getElementById('func-id').value || null;
+    const fullName = document.getElementById('func-nome').value.trim();
+    const storeId  = document.getElementById('func-loja').value;
+    const hiredAt  = document.getElementById('func-data').value || null;
+    const isActive = document.getElementById('func-ativo').checked;
+    const file     = document.getElementById('func-foto-input').files?.[0];
+    let   photoUrl = empId ? (state.employees.find(em => em.id === empId)?.photo_url || null) : null;
+
+    try {
+      if (file) {
+        const ext  = file.name.split('.').pop();
+        const path = `${Date.now()}.${ext}`;
+        const { error: upErr } = await sb.storage.from('employee-photos').upload(path, file, { upsert: true });
+        if (upErr) throw new Error('Erro no upload da foto: ' + upErr.message);
+        const { data: urlData } = sb.storage.from('employee-photos').getPublicUrl(path);
+        photoUrl = urlData?.publicUrl || null;
+      }
+
+      const payload = { full_name: fullName, store_id: storeId, hired_at: hiredAt, is_active: isActive, photo_url: photoUrl };
+
+      if (empId) {
+        const { error } = await sb.from('employees').update(payload).eq('id', empId);
+        if (error) throw error;
+      } else {
+        const { error } = await sb.from('employees').insert(payload);
+        if (error) throw error;
+      }
+
+      closeFuncionarioModal();
+      await loadEmployees();
+    } catch (err) {
+      errEl.textContent   = err.message || 'Erro ao salvar.';
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled  = false;
+      btn.innerHTML = saveSVG + ' Salvar';
+    }
+  }
+
+  async function toggleEmployeeActive(id, currentActive) {
+    try {
+      const { error } = await sb.from('employees').update({ is_active: !currentActive }).eq('id', id);
+      if (error) throw error;
+      await loadEmployees();
+    } catch (err) {
+      alert('Erro: ' + err.message);
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
   //  INIT — carrega dados após login
   // ════════════════════════════════════════════════════════
   const _origShowApp = showApp;
@@ -1282,7 +1528,7 @@
   };
 
   // Páginas exclusivas para admin
-  const ADMIN_PAGES = ['dashboard', 'tipos', 'usuarios'];
+  const ADMIN_PAGES = ['dashboard', 'tipos', 'instaladores', 'usuarios'];
 
   // Recarrega dados ao navegar + protege páginas admin
   const _origNavigate2 = navigate;
@@ -1293,6 +1539,7 @@
       return;
     }
     _origNavigate2(page);
-    if (page === 'dashboard') loadDashboard();
-    if (page === 'usuarios')  loadUsers();
+    if (page === 'dashboard')    loadDashboard();
+    if (page === 'instaladores') loadEmployees();
+    if (page === 'usuarios')     loadUsers();
   };

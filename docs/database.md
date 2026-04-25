@@ -14,6 +14,24 @@ erDiagram
 
 ## Estrutura das Tabelas
 
+### Tabela `stores`
+
+**Propósito:** Representa as unidades físicas da Markel Film para segregação de acesso e controle.
+
+**Colunas:**
+
+| Coluna | Tipo | Restrições | Descrição |
+|---|---|---|---|
+| `id` | `UUID` | PK, DEFAULT uuid_generate_v4() | Chave primária |
+| `name` | `TEXT` | NOT NULL | Nome da loja |
+| `address` | `TEXT` | — | Endereço da loja |
+| `phone` | `VARCHAR(20)`| — | Telefone / WhatsApp |
+| `is_active` | `BOOLEAN` | NOT NULL, DEFAULT true | Se a loja está ativa |
+| `created_at` | `TIMESTAMPTZ` | NOT NULL, DEFAULT now() | Data de criação |
+
+**Relacionamentos:**
+- Nenhum.
+
 ### Tabela `profiles`
 
 **Propósito:** Armazena os dados de perfil dos usuários do sistema e define a hierarquia de controle de acesso.
@@ -27,12 +45,14 @@ erDiagram
 | `email` | `TEXT` | NOT NULL | E-mail do usuário |
 | `display_name` | `TEXT` | — | Nome de exibição |
 | `role` | `TEXT` | NOT NULL | Nível de permissão (`admin` ou `employee`) |
+| `store_id` | `UUID` | — | Referência para `stores(id)` |
 | `is_active` | `BOOLEAN` | NOT NULL, DEFAULT true | Se o perfil está ativo |
 | `created_at` | `TIMESTAMPTZ` | NOT NULL, DEFAULT now() | Data de criação |
 | `updated_at` | `TIMESTAMPTZ` | NOT NULL, DEFAULT now() | Data da última atualização |
 
 **Relacionamentos:**
 - FK `user_id` → `auth.users(id)`
+- FK `store_id` → `stores(id)`
 - Cascade: ON DELETE CASCADE
 
 **Observações:** O campo `role` é utilizado pelas policies RLS e Edge Functions para validar permissões administrativas.
@@ -124,6 +144,7 @@ erDiagram
 | Coluna | Tipo | Restrições | Descrição |
 |---|---|---|---|
 | `id` | `UUID` | PK, DEFAULT uuid_generate_v4() | Chave primária |
+| `store_id` | `UUID` | NOT NULL, DEFAULT loja 1 | Referência para `stores(id)` |
 | `vehicle_id` | `UUID` | NOT NULL | Referência para `vehicles(id)` |
 | `film_type_id` | `UUID` | — | Referência para `film_types(id)` |
 | `installed_at` | `DATE` | NOT NULL, DEFAULT CURRENT_DATE | Data da instalação |
@@ -137,6 +158,7 @@ erDiagram
 | `updated_at` | `TIMESTAMPTZ` | NOT NULL, DEFAULT now() | Atualização via trigger |
 
 **Relacionamentos:**
+- FK `store_id` → `stores(id)` (ON DELETE RESTRICT)
 - FK `vehicle_id` → `vehicles(id)` (ON DELETE CASCADE)
 - FK `film_type_id` → `film_types(id)` (ON DELETE SET NULL)
 - FK `installed_by` → `auth.users(id)` (ON DELETE SET NULL)
