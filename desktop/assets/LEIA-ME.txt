@@ -1,0 +1,8 @@
+Coloque aqui o arquivo icon.ico com os tamanhos: 16x16, 32x32, 48x48, 256x256.
+
+Ferramentas para gerar:
+  - https://www.icoconverter.com  (upload de PNG → .ico multi-tamanho)
+  - Figma + plugin "Icon to ICO"
+
+O arquivo deve se chamar exatamente: icon.ico
+Sem ele o electron-builder usará o ícone padrão do Electron.
