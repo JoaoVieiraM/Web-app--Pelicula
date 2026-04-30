@@ -3,7 +3,7 @@ const path = require('path');
 
 // ── Configuração ────────────────────────────────────────────────
 // Atualizar com a URL real após o deploy na Vercel
-const APP_URL = 'https://SEU-PROJETO.vercel.app';
+const APP_URL = 'https://web-app-pelicula.vercel.app/';
 // ────────────────────────────────────────────────────────────────
 
 function createWindow() {
