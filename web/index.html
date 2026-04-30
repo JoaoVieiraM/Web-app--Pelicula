@@ -41,26 +41,26 @@
 
     <!-- Login form -->
     <div id="login-card" style="background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
-      <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 24px;">Entrar na sua conta</h2>
+      <h2 style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0 0 24px;">Entrar na sua conta</h2>
 
       <div id="login-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
 
       <form onsubmit="handleLogin(event)" style="display:flex;flex-direction:column;gap:16px;">
         <div>
-          <label for="login-email" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
+          <label for="login-email" style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">E-mail</label>
           <input id="login-email" type="email" required autocomplete="email"
             placeholder="seu@email.com"
-            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <div>
-          <label for="login-password" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Senha</label>
+          <label for="login-password" style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Senha</label>
           <div style="position:relative;">
             <input id="login-password" type="password" required autocomplete="current-password"
               placeholder="••••••••"
-              style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;padding-right:44px;"
+              style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;padding-right:44px;"
               onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
-            <button type="button" onclick="togglePassword()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94A3B8;" aria-label="Mostrar senha">
+            <button type="button" onclick="togglePassword()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-500);" aria-label="Mostrar senha">
               <svg id="eye-icon" style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
@@ -69,7 +69,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:-4px;">
           <input type="checkbox" id="login-remember" checked style="width:15px;height:15px;accent-color:var(--color-primary);cursor:pointer;" />
-          <label for="login-remember" style="font-size:12px;color:#64748B;cursor:pointer;user-select:none;">Manter conectado</label>
+          <label for="login-remember" style="font-size:12px;color:var(--gray-500);cursor:pointer;user-select:none;">Manter conectado</label>
         </div>
         <button type="submit" id="login-btn"
           style="width:100%;padding:12px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;transition:background-color 150ms ease;"
@@ -93,23 +93,23 @@
     <div id="forgot-panel" style="display:none;background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
         <button type="button" onclick="showLoginPanel()"
-          style="background:none;border:none;cursor:pointer;color:#64748B;padding:4px;display:flex;align-items:center;"
+          style="background:none;border:none;cursor:pointer;color:var(--gray-500);padding:4px;display:flex;align-items:center;"
           aria-label="Voltar">
           <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
           </svg>
         </button>
-        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Recuperar senha</h2>
+        <h2 style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0;">Recuperar senha</h2>
       </div>
-      <p style="font-size:13px;color:#475569;margin:0 0 20px;">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
+      <p style="font-size:13px;color:var(--gray-500);margin:0 0 20px;">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
       <div id="forgot-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
       <div id="forgot-success" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-success);"></div>
       <form onsubmit="handleForgotPassword(event)" style="display:flex;flex-direction:column;gap:16px;">
         <div>
-          <label for="forgot-email" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
+          <label for="forgot-email" style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">E-mail</label>
           <input id="forgot-email" type="email" required autocomplete="email"
             placeholder="seu@email.com"
-            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <button type="submit" id="forgot-btn"
@@ -131,23 +131,23 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
           </svg>
         </div>
-        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 4px;">Criar nova senha</h2>
-        <p style="font-size:13px;color:#64748B;margin:0;">Escolha uma senha forte para sua conta.</p>
+        <h2 style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0 0 4px;">Criar nova senha</h2>
+        <p style="font-size:13px;color:var(--gray-500);margin:0;">Escolha uma senha forte para sua conta.</p>
       </div>
       <div id="reset-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
       <form onsubmit="handlePasswordReset(event)" style="display:flex;flex-direction:column;gap:16px;">
         <div>
-          <label for="reset-password" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nova senha</label>
+          <label for="reset-password" style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Nova senha</label>
           <input id="reset-password" type="password" required minlength="8" autocomplete="new-password"
             placeholder="Mínimo 8 caracteres"
-            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <div>
-          <label for="reset-confirm" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Confirmar nova senha</label>
+          <label for="reset-confirm" style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Confirmar nova senha</label>
           <input id="reset-confirm" type="password" required minlength="8" autocomplete="new-password"
             placeholder="Repita a senha"
-            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <button type="submit" id="reset-btn"
@@ -161,7 +161,7 @@
       </form>
     </div>
 
-    <p style="text-align:center;color:#475569;font-size:12px;margin-top:20px;">
+    <p style="text-align:center;color:var(--gray-500);font-size:12px;margin-top:20px;">
       Problemas de acesso? Contate o administrador.
     </p>
   </div>
@@ -1035,12 +1035,12 @@
 ══════════════════════════════════════════ -->
 <div id="modal-criar-usuario" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
   <div style="background:white;border-radius:16px;width:100%;max-width:440px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
-    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #F1F5F9;">
+    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid var(--gray-100);">
       <div style="flex:1;">
-        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Novo Usuário</h2>
-        <p style="font-size:13px;color:#64748B;margin:4px 0 0;">Um link de primeiro acesso será gerado automaticamente</p>
+        <h2 style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0;">Novo Usuário</h2>
+        <p style="font-size:13px;color:var(--gray-500);margin:4px 0 0;">Um link de primeiro acesso será gerado automaticamente</p>
       </div>
-      <button type="button" onclick="closeCreateUserModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+      <button type="button" onclick="closeCreateUserModal()" style="background:none;border:none;cursor:pointer;color:var(--gray-500);padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
         <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -1050,23 +1050,23 @@
     <form onsubmit="handleCreateUserSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo</label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Nome completo</label>
         <input id="cu-nome" type="text" placeholder="Ex.: Ana Lima"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail <span style="color:var(--color-accent);">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">E-mail <span style="color:var(--color-accent);">*</span></label>
         <input id="cu-email" type="email" required placeholder="ana@empresa.com"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Perfil de acesso <span style="color:var(--color-accent);">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Perfil de acesso <span style="color:var(--color-accent);">*</span></label>
         <select id="cu-role" onchange="onCuRoleChange(this)"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
           <option value="employee">Atendente — apenas busca e cadastro de clientes</option>
           <option value="admin">Admin — acesso completo + gestão de usuários</option>
@@ -1074,18 +1074,18 @@
       </div>
 
       <div id="cu-store-row">
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span id="cu-store-required" style="color:var(--color-accent);">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Loja <span id="cu-store-required" style="color:var(--color-accent);">*</span></label>
         <select id="cu-store"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
           <option value="">Carregando lojas...</option>
         </select>
-        <p id="cu-store-hint" style="font-size:11px;color:#94A3B8;margin:4px 0 0;">Obrigatório para Atendente. Admins podem ficar sem loja.</p>
+        <p id="cu-store-hint" style="font-size:11px;color:var(--gray-500);margin:4px 0 0;">Obrigatório para Atendente. Admins podem ficar sem loja.</p>
       </div>
 
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;">
         <button type="button" onclick="closeCreateUserModal()"
-          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:var(--gray-900);border:1.5px solid var(--gray-300);border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
           Cancelar
         </button>
         <button type="submit" id="create-user-btn"
@@ -1108,23 +1108,23 @@
   <div style="background:white;border-radius:16px;width:100%;max-width:420px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
     <div style="padding:24px 24px 0;text-align:center;">
       <div style="width:48px;height:48px;background:#DCFCE7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
-        <svg style="width:24px;height:24px;color:#16A34A;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <svg style="width:24px;height:24px;color:var(--color-success);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </div>
-      <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 4px;">Usuário criado com sucesso!</h2>
-      <p id="access-link-email" style="font-size:13px;color:#64748B;margin:0 0 20px;"></p>
+      <h2 style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0 0 4px;">Usuário criado com sucesso!</h2>
+      <p id="access-link-email" style="font-size:13px;color:var(--gray-500);margin:0 0 20px;"></p>
     </div>
     <div style="padding:0 24px 24px;">
-      <p style="font-size:13px;font-weight:500;color:#374151;margin:0 0 8px;">Link de primeiro acesso:</p>
+      <p style="font-size:13px;font-weight:500;color:var(--gray-700);margin:0 0 8px;">Link de primeiro acesso:</p>
       <div style="display:flex;gap:8px;align-items:center;">
         <input id="access-link-input" type="text" readonly
-          style="flex:1;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:12px;color:#475569;outline:none;box-sizing:border-box;font-family:monospace;background:#F8FAFC;overflow:hidden;text-overflow:ellipsis;" />
+          style="flex:1;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:12px;color:var(--gray-500);outline:none;box-sizing:border-box;font-family:monospace;background:var(--gray-50);overflow:hidden;text-overflow:ellipsis;" />
         <button onclick="copyAccessLink()" id="copy-link-btn"
           style="padding:10px 14px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;"
           onmouseover="this.style.background='var(--color-primary-hover)'" onmouseout="this.style.background='var(--color-primary)'">
           Copiar
         </button>
       </div>
-      <p style="font-size:11px;color:#94A3B8;margin:8px 0 0;">Envie este link ao usuário. Ele expira após o primeiro uso.</p>
+      <p style="font-size:11px;color:var(--gray-500);margin:8px 0 0;">Envie este link ao usuário. Ele expira após o primeiro uso.</p>
       <div style="display:flex;justify-content:flex-end;margin-top:20px;">
         <button onclick="closeAccessLinkModal()"
           style="padding:10px 24px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;"
@@ -1141,12 +1141,12 @@
 ══════════════════════════════════════════ -->
 <div id="modal-editar-cliente" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
   <div style="background:white;border-radius:16px;width:100%;max-width:600px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
-    <div style="display:flex;align-items:center;justify-content:between;padding:20px 24px 0;border-bottom:1px solid #F1F5F9;padding-bottom:16px;margin-bottom:0;">
+    <div style="display:flex;align-items:center;justify-content:between;padding:20px 24px 0;border-bottom:1px solid var(--gray-100);padding-bottom:16px;margin-bottom:0;">
       <div style="flex:1;">
-        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Editar Cliente</h2>
-        <p id="edit-modal-subtitle" style="font-size:13px;color:#64748B;margin:4px 0 0;">—</p>
+        <h2 style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0;">Editar Cliente</h2>
+        <p id="edit-modal-subtitle" style="font-size:13px;color:var(--gray-500);margin:4px 0 0;">—</p>
       </div>
-      <button type="button" onclick="closeEditClientModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+      <button type="button" onclick="closeEditClientModal()" style="background:none;border:none;cursor:pointer;color:var(--gray-500);padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
         <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -1157,85 +1157,85 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
 
         <div style="grid-column:1/-1;">
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:var(--color-accent);">*</span></label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Nome completo <span style="color:var(--color-accent);">*</span></label>
           <input id="edit-nome" type="text" required
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Telefone / WhatsApp <span style="color:var(--color-accent);">*</span></label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Telefone / WhatsApp <span style="color:var(--color-accent);">*</span></label>
           <input id="edit-tel" type="tel" required maxlength="15" oninput="formatPhone(this)"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">E-mail</label>
           <input id="edit-email" type="email"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Data de nascimento</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Data de nascimento</label>
           <input id="edit-nasc" type="date"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">CEP</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">CEP</label>
           <div style="display:flex;gap:8px;">
             <input id="edit-cep" type="text" placeholder="00000-000" maxlength="9" oninput="formatCEP(this)"
-              style="flex:1;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+              style="flex:1;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
               onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
             <button type="button" onclick="buscarCEPEdit()"
-              style="padding:10px 14px;border:1.5px solid #CBD5E1;border-radius:10px;font-size:13px;color:#475569;background:white;cursor:pointer;white-space:nowrap;font-family:inherit;">
+              style="padding:10px 14px;border:1.5px solid #CBD5E1;border-radius:10px;font-size:13px;color:var(--gray-500);background:white;cursor:pointer;white-space:nowrap;font-family:inherit;">
               Buscar
             </button>
           </div>
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Rua / Logradouro</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Rua / Logradouro</label>
           <input id="edit-rua" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Número</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Número</label>
           <input id="edit-num" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Complemento</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Complemento</label>
           <input id="edit-comp" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Bairro</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Bairro</label>
           <input id="edit-bairro" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Cidade</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Cidade</label>
           <input id="edit-cidade" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Estado (UF)</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Estado (UF)</label>
           <select id="edit-estado"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
             <option value="">UF</option>
             <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option>
@@ -1248,9 +1248,9 @@
         </div>
 
         <div style="grid-column:1/-1;">
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Observações</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Observações</label>
           <textarea id="edit-obs" rows="3"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;resize:vertical;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'"></textarea>
         </div>
 
@@ -1258,7 +1258,7 @@
 
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
         <button type="button" onclick="closeEditClientModal()"
-          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:var(--gray-900);border:1.5px solid var(--gray-300);border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
           Cancelar
         </button>
         <button type="submit" id="edit-client-btn"
@@ -1279,12 +1279,12 @@
 ══════════════════════════════════════════ -->
 <div id="modal-novo-tipo" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
   <div style="background:white;border-radius:16px;width:100%;max-width:480px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
-    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #F1F5F9;">
+    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid var(--gray-100);">
       <div style="flex:1;">
-        <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Novo Tipo de Película</h2>
-        <p style="font-size:13px;color:#64748B;margin:4px 0 0;">Adicionar ao catálogo</p>
+        <h2 style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0;">Novo Tipo de Película</h2>
+        <p style="font-size:13px;color:var(--gray-500);margin:4px 0 0;">Adicionar ao catálogo</p>
       </div>
-      <button type="button" onclick="closeNovoTipoModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+      <button type="button" onclick="closeNovoTipoModal()" style="background:none;border:none;cursor:pointer;color:var(--gray-500);padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
         <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -1294,23 +1294,23 @@
     <form onsubmit="handleNovoTipoSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome <span style="color:var(--color-accent);">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Nome <span style="color:var(--color-accent);">*</span></label>
         <input id="nt-nome" type="text" required placeholder="Ex.: Insulfilm G20"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Marca / Fabricante</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Marca / Fabricante</label>
           <input id="nt-marca" type="text" placeholder="Ex.: 3M, Llumar"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Categoria</label>
+          <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Categoria</label>
           <select id="nt-categoria"
-            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
             <option value="">Selecione...</option>
             <option value="solar">Solar</option>
@@ -1322,27 +1322,27 @@
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Descrição</label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Descrição</label>
         <input id="nt-desc" type="text" placeholder="Ex.: Alta rejeição de calor, baixa reflexão"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Garantia padrão (meses)</label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Garantia padrão (meses)</label>
         <input id="nt-garantia" type="number" placeholder="Ex.: 24" min="1" max="120"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
-      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#374151;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--gray-700);">
         <input id="nt-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--color-primary);" />
         Disponível para novas instalações (Ativo)
       </label>
 
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;">
         <button type="button" onclick="closeNovoTipoModal()"
-          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:var(--gray-900);border:1.5px solid var(--gray-300);border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
           Cancelar
         </button>
         <button type="submit" id="novo-tipo-btn"
@@ -1363,12 +1363,12 @@
 ══════════════════════════════════════════ -->
 <div id="modal-funcionario" style="display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
   <div style="background:white;border-radius:16px;width:100%;max-width:480px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
-    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #F1F5F9;">
+    <div style="display:flex;align-items:center;padding:20px 24px 16px;border-bottom:1px solid var(--gray-100);">
       <div style="flex:1;">
-        <h2 id="func-modal-title" style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Novo Instalador</h2>
-        <p style="font-size:13px;color:#64748B;margin:4px 0 0;">Preencha os dados do instalador</p>
+        <h2 id="func-modal-title" style="font-size:16px;font-weight:600;color:var(--gray-900);margin:0;">Novo Instalador</h2>
+        <p style="font-size:13px;color:var(--gray-500);margin:4px 0 0;">Preencha os dados do instalador</p>
       </div>
-      <button type="button" onclick="closeFuncionarioModal()" style="background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
+      <button type="button" onclick="closeFuncionarioModal()" style="background:none;border:none;cursor:pointer;color:var(--gray-500);padding:4px;display:flex;align-items:center;margin-left:12px;" aria-label="Fechar">
         <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
@@ -1379,52 +1379,52 @@
       <input type="hidden" id="func-id" />
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:var(--color-accent);">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Nome completo <span style="color:var(--color-accent);">*</span></label>
         <input id="func-nome" type="text" required placeholder="Ex.: Carlos Oliveira"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span style="color:var(--color-accent);">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Loja <span style="color:var(--color-accent);">*</span></label>
         <select id="func-loja" required
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
           <option value="" disabled selected>Selecione a loja...</option>
         </select>
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Data de contratação</label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Data de contratação</label>
         <input id="func-data" type="date"
-          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:var(--gray-900);outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Foto</label>
+        <label style="display:block;font-size:13px;font-weight:500;color:var(--gray-700);margin-bottom:6px;">Foto</label>
         <div style="display:flex;align-items:center;gap:12px;">
-          <div id="func-foto-preview" style="width:48px;height:48px;border-radius:50%;background:#F1F5F9;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-            <svg style="width:20px;height:20px;color:#CBD5E1;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          <div id="func-foto-preview" style="width:48px;height:48px;border-radius:50%;background:var(--gray-100);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+            <svg style="width:20px;height:20px;color:var(--gray-300);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
           </div>
           <div>
-            <label for="func-foto-input" style="display:inline-block;padding:8px 14px;font-size:13px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:8px;background:white;cursor:pointer;font-family:inherit;">
+            <label for="func-foto-input" style="display:inline-block;padding:8px 14px;font-size:13px;font-weight:500;color:var(--gray-900);border:1.5px solid var(--gray-300);border-radius:8px;background:white;cursor:pointer;font-family:inherit;">
               Escolher foto
             </label>
             <input id="func-foto-input" type="file" accept="image/*" style="display:none;" onchange="previewFuncPhoto(this)" />
-            <p style="font-size:11px;color:#94A3B8;margin:4px 0 0;">JPG ou PNG até 2 MB. Opcional.</p>
+            <p style="font-size:11px;color:var(--gray-500);margin:4px 0 0;">JPG ou PNG até 2 MB. Opcional.</p>
           </div>
         </div>
       </div>
 
-      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#374151;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--gray-700);">
         <input id="func-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--color-primary);" />
         Instalador ativo (disponível para novas instalações)
       </label>
 
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px;">
         <button type="button" onclick="closeFuncionarioModal()"
-          style="padding:10px 20px;font-size:14px;font-weight:500;color:#475569;border:1.5px solid #CBD5E1;border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
+          style="padding:10px 20px;font-size:14px;font-weight:500;color:var(--gray-900);border:1.5px solid var(--gray-300);border-radius:10px;background:white;cursor:pointer;font-family:inherit;">
           Cancelar
         </button>
         <button type="submit" id="func-submit-btn"
