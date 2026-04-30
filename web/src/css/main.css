@@ -109,7 +109,7 @@
     .timeline-item::before {
       content: ''; position: absolute;
       left: 19px; top: 44px; bottom: -20px;
-      width: 2px; background: #E2E8F0;
+      width: 2px; background: var(--gray-300);
     }
     .timeline-item:last-child::before { display: none; }
 
