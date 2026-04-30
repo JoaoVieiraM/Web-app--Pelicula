@@ -43,7 +43,7 @@
     <div id="login-card" style="background:white;border-radius:20px;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
       <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 24px;">Entrar na sua conta</h2>
 
-      <div id="login-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
+      <div id="login-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
 
       <form onsubmit="handleLogin(event)" style="display:flex;flex-direction:column;gap:16px;">
         <div>
@@ -102,7 +102,7 @@
         <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0;">Recuperar senha</h2>
       </div>
       <p style="font-size:13px;color:#475569;margin:0 0 20px;">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
-      <div id="forgot-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
+      <div id="forgot-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
       <div id="forgot-success" style="display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-success);"></div>
       <form onsubmit="handleForgotPassword(event)" style="display:flex;flex-direction:column;gap:16px;">
         <div>
@@ -134,7 +134,7 @@
         <h2 style="font-size:16px;font-weight:600;color:#0F172A;margin:0 0 4px;">Criar nova senha</h2>
         <p style="font-size:13px;color:#64748B;margin:0;">Escolha uma senha forte para sua conta.</p>
       </div>
-      <div id="reset-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
+      <div id="reset-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--color-danger);"></div>
       <form onsubmit="handlePasswordReset(event)" style="display:flex;flex-direction:column;gap:16px;">
         <div>
           <label for="reset-password" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nova senha</label>
@@ -1045,7 +1045,7 @@
       </button>
     </div>
 
-    <div id="create-user-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
+    <div id="create-user-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
 
     <form onsubmit="handleCreateUserSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
 
@@ -1057,14 +1057,14 @@
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail <span style="color:#EF4444;">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail <span style="color:var(--color-accent);">*</span></label>
         <input id="cu-email" type="email" required placeholder="ana@empresa.com"
           style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Perfil de acesso <span style="color:#EF4444;">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Perfil de acesso <span style="color:var(--color-accent);">*</span></label>
         <select id="cu-role" onchange="onCuRoleChange(this)"
           style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
@@ -1074,7 +1074,7 @@
       </div>
 
       <div id="cu-store-row">
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span id="cu-store-required" style="color:#EF4444;">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span id="cu-store-required" style="color:var(--color-accent);">*</span></label>
         <select id="cu-store"
           style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
@@ -1151,20 +1151,20 @@
       </button>
     </div>
 
-    <div id="edit-client-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
+    <div id="edit-client-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
 
     <form onsubmit="handleEditClientSubmit(event)" style="padding:20px 24px 24px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
 
         <div style="grid-column:1/-1;">
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:#EF4444;">*</span></label>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:var(--color-accent);">*</span></label>
           <input id="edit-nome" type="text" required
             style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
-          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Telefone / WhatsApp <span style="color:#EF4444;">*</span></label>
+          <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Telefone / WhatsApp <span style="color:var(--color-accent);">*</span></label>
           <input id="edit-tel" type="tel" required maxlength="15" oninput="formatPhone(this)"
             style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
             onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
@@ -1289,12 +1289,12 @@
       </button>
     </div>
 
-    <div id="novo-tipo-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
+    <div id="novo-tipo-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
 
     <form onsubmit="handleNovoTipoSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome <span style="color:#EF4444;">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome <span style="color:var(--color-accent);">*</span></label>
         <input id="nt-nome" type="text" required placeholder="Ex.: Insulfilm G20"
           style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
@@ -1373,20 +1373,20 @@
       </button>
     </div>
 
-    <div id="func-modal-error" style="display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
+    <div id="func-modal-error" style="display:none;background:#FFF5F5;border:1px solid rgba(153,27,27,0.2);border-radius:10px;padding:12px 14px;margin:16px 24px 0;font-size:13px;color:var(--color-danger);"></div>
 
     <form onsubmit="handleFuncionarioSubmit(event)" style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;">
       <input type="hidden" id="func-id" />
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:#EF4444;">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:var(--color-accent);">*</span></label>
         <input id="func-nome" type="text" required placeholder="Ex.: Carlos Oliveira"
           style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
-        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span style="color:#EF4444;">*</span></label>
+        <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span style="color:var(--color-accent);">*</span></label>
         <select id="func-loja" required
           style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
           onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
