@@ -50,16 +50,16 @@
           <label for="login-email" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
           <input id="login-email" type="email" required autocomplete="email"
             placeholder="seu@email.com"
-            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <div>
           <label for="login-password" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Senha</label>
           <div style="position:relative;">
             <input id="login-password" type="password" required autocomplete="current-password"
               placeholder="••••••••"
-              style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;padding-right:44px;"
-              onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+              style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;padding-right:44px;"
+              onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
             <button type="button" onclick="togglePassword()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94A3B8;" aria-label="Mostrar senha">
               <svg id="eye-icon" style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -68,7 +68,7 @@
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:-4px;">
-          <input type="checkbox" id="login-remember" checked style="width:15px;height:15px;accent-color:#0369A1;cursor:pointer;" />
+          <input type="checkbox" id="login-remember" checked style="width:15px;height:15px;accent-color:var(--color-primary);cursor:pointer;" />
           <label for="login-remember" style="font-size:12px;color:#64748B;cursor:pointer;user-select:none;">Manter conectado</label>
         </div>
         <button type="submit" id="login-btn"
@@ -109,8 +109,8 @@
           <label for="forgot-email" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
           <input id="forgot-email" type="email" required autocomplete="email"
             placeholder="seu@email.com"
-            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <button type="submit" id="forgot-btn"
           style="width:100%;padding:12px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:background-color 150ms ease;"
@@ -140,15 +140,15 @@
           <label for="reset-password" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nova senha</label>
           <input id="reset-password" type="password" required minlength="8" autocomplete="new-password"
             placeholder="Mínimo 8 caracteres"
-            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <div>
           <label for="reset-confirm" style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Confirmar nova senha</label>
           <input id="reset-confirm" type="password" required minlength="8" autocomplete="new-password"
             placeholder="Repita a senha"
-            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:11px 14px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <button type="submit" id="reset-btn"
           style="width:100%;padding:12px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:background-color 150ms ease;"
@@ -435,7 +435,7 @@
                 </svg>
               </div>
               <input id="cpf-input" type="text" placeholder="000.000.000-00"
-                class="w-full pl-9 pr-4 py-3 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 text-sm"
+                class="w-full pl-9 pr-4 py-3 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900 text-sm"
                 maxlength="14" oninput="formatCPF(this)" />
             </div>
             <button onclick="searchByCPF()"
@@ -532,7 +532,7 @@
                 <div class="sm:col-span-2">
                   <label for="nc-nome" class="block text-sm font-medium text-slate-700 mb-1.5">Nome completo <span class="text-red-500">*</span></label>
                   <input id="nc-nome" type="text" required placeholder="Ex.: João Carlos Silva"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
@@ -540,27 +540,27 @@
                   <input id="nc-cpf" type="text" required placeholder="000.000.000-00" maxlength="14"
                     oninput="formatCPF(this)"
                     onblur="validateCPFField(this)"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                   <span id="nc-cpf-error" class="hidden text-xs text-red-500 mt-1">CPF inválido</span>
                 </div>
 
                 <div>
                   <label for="nc-nasc" class="block text-sm font-medium text-slate-700 mb-1.5">Data de nascimento</label>
                   <input id="nc-nasc" type="date"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nc-tel" class="block text-sm font-medium text-slate-700 mb-1.5">Telefone / WhatsApp <span class="text-red-500">*</span></label>
                   <input id="nc-tel" type="tel" required placeholder="(11) 99999-9999" maxlength="15"
                     oninput="formatPhone(this)"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nc-email" class="block text-sm font-medium text-slate-700 mb-1.5">E-mail</label>
                   <input id="nc-email" type="email" placeholder="joao@email.com"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
               </div>
@@ -579,7 +579,7 @@
                   <div class="flex gap-2">
                     <input id="nc-cep" type="text" placeholder="00000-000" maxlength="9"
                       oninput="formatCEP(this)"
-                      class="w-40 px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                      class="w-40 px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                     <button type="button" onclick="simulateCEP()"
                       class="px-3 py-2.5 border border-slate-300 rounded-xl text-slate-600 text-sm hover:bg-slate-50 cursor-pointer transition-colors inline-flex items-center gap-1.5">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -594,37 +594,37 @@
                 <div class="sm:col-span-2">
                   <label for="nc-rua" class="block text-sm font-medium text-slate-700 mb-1.5">Rua / Logradouro</label>
                   <input id="nc-rua" type="text" placeholder="Rua das Acácias"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nc-num" class="block text-sm font-medium text-slate-700 mb-1.5">Número</label>
                   <input id="nc-num" type="text" placeholder="123"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nc-comp" class="block text-sm font-medium text-slate-700 mb-1.5">Complemento</label>
                   <input id="nc-comp" type="text" placeholder="Apto 42, Bloco B"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nc-bairro" class="block text-sm font-medium text-slate-700 mb-1.5">Bairro</label>
                   <input id="nc-bairro" type="text" placeholder="Vila Madalena"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nc-cidade" class="block text-sm font-medium text-slate-700 mb-1.5">Cidade</label>
                   <input id="nc-cidade" type="text" placeholder="São Paulo"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div class="sm:col-span-2">
                   <label for="nc-estado" class="block text-sm font-medium text-slate-700 mb-1.5">Estado (UF)</label>
                   <select id="nc-estado"
-                    class="w-32 px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500 bg-white cursor-pointer">
+                    class="w-32 px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900 bg-white cursor-pointer">
                     <option value="">UF</option>
                     <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option>
                     <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
@@ -645,7 +645,7 @@
               </div>
               <div class="px-5 py-5">
                 <textarea rows="3" placeholder="Informações adicionais sobre o cliente..."
-                  class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 resize-none"></textarea>
+                  class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900 resize-none"></textarea>
               </div>
             </div>
 
@@ -740,39 +740,39 @@
                 <div>
                   <label for="nv-marca" class="block text-sm font-medium text-slate-700 mb-1.5">Marca <span class="text-red-500">*</span></label>
                   <input id="nv-marca" type="text" required placeholder="Ex.: Toyota, Volkswagen"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nv-modelo" class="block text-sm font-medium text-slate-700 mb-1.5">Modelo <span class="text-red-500">*</span></label>
                   <input id="nv-modelo" type="text" required placeholder="Ex.: Corolla, Gol"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nv-ano" class="block text-sm font-medium text-slate-700 mb-1.5">Ano <span class="text-red-500">*</span></label>
                   <input id="nv-ano" type="number" required placeholder="2024" min="1950" max="2030"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div>
                   <label for="nv-cor" class="block text-sm font-medium text-slate-700 mb-1.5">Cor</label>
                   <input id="nv-cor" type="text" placeholder="Ex.: Prata, Preto"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
 
                 <div class="sm:col-span-2">
                   <label for="nv-placa" class="block text-sm font-medium text-slate-700 mb-1.5">Placa <span class="text-red-500">*</span></label>
                   <input id="nv-placa" type="text" required placeholder="ABC1234 ou ABC1D23" maxlength="8"
                     oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500" />
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900" />
                   <p class="text-xs text-slate-400 mt-1">Sem traços ou espaços — ex.: ABC1234</p>
                 </div>
 
                 <div class="sm:col-span-2">
                   <label for="nv-obs" class="block text-sm font-medium text-slate-700 mb-1.5">Observações</label>
                   <textarea id="nv-obs" rows="2" placeholder="Ex.: Vidro traseiro com rachado..."
-                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 resize-none"></textarea>
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900 resize-none"></textarea>
                 </div>
 
               </div>
@@ -854,14 +854,14 @@
             <div class="px-5 py-5 space-y-5">
               <div>
                 <label for="film-type" class="block text-sm font-medium text-slate-700 mb-1.5">Tipo de Película <span class="text-red-500">*</span></label>
-                <select id="film-type" required class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500 bg-white cursor-pointer">
+                <select id="film-type" required class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900 bg-white cursor-pointer">
                   <option value="" disabled selected>Carregando tipos...</option>
                 </select>
               </div>
               <div>
                 <label for="installer-id" class="block text-sm font-medium text-slate-700 mb-1.5">Instalador responsável <span class="text-red-500">*</span></label>
                 <select id="installer-id" required onchange="onInstallerChange(this)"
-                  class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500 bg-white cursor-pointer">
+                  class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900 bg-white cursor-pointer">
                   <option value="" disabled selected>Selecione o instalador...</option>
                 </select>
                 <div id="installer-preview" class="hidden mt-2 p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3">
@@ -872,11 +872,11 @@
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label for="install-date" class="block text-sm font-medium text-slate-700 mb-1.5">Data da Instalação <span class="text-red-500">*</span></label>
-                  <input type="date" id="install-date" required class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                  <input type="date" id="install-date" required class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
                 <div>
                   <label for="warranty" class="block text-sm font-medium text-slate-700 mb-1.5">Garantia (meses)</label>
-                  <input type="number" id="warranty" value="12" min="1" max="60" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                  <input type="number" id="warranty" value="12" min="1" max="60" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900" />
                 </div>
               </div>
               <div>
@@ -893,7 +893,7 @@
               </div>
               <div>
                 <label for="notes" class="block text-sm font-medium text-slate-700 mb-1.5">Observações</label>
-                <textarea id="notes" rows="3" placeholder="Ex.: cliente solicitou película com menor escurecimento no parabrisa..." class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-blue-500 resize-none"></textarea>
+                <textarea id="notes" rows="3" placeholder="Ex.: cliente solicitou película com menor escurecimento no parabrisa..." class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-gray-900 resize-none"></textarea>
               </div>
 
               <div class="border-t border-slate-100 pt-4">
@@ -901,7 +901,7 @@
                 <div class="space-y-4">
                   <div>
                     <label for="payment-method" class="block text-sm font-medium text-slate-700 mb-1.5">Forma de Pagamento</label>
-                    <select id="payment-method" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500 bg-white cursor-pointer">
+                    <select id="payment-method" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900 bg-white cursor-pointer">
                       <option value="">Não informado</option>
                       <option value="Dinheiro">Dinheiro</option>
                       <option value="Pix">Pix</option>
@@ -918,11 +918,11 @@
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <label for="hours-in" class="block text-sm font-medium text-slate-700 mb-1.5">Horário de Entrada</label>
-                      <input type="time" id="hours-in" onchange="computeFinalTime()" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                      <input type="time" id="hours-in" onchange="computeFinalTime()" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900" />
                     </div>
                     <div>
                       <label for="hours-out" class="block text-sm font-medium text-slate-700 mb-1.5">Horário de Saída</label>
-                      <input type="time" id="hours-out" onchange="computeFinalTime()" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-blue-500" />
+                      <input type="time" id="hours-out" onchange="computeFinalTime()" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:border-gray-900" />
                     </div>
                   </div>
                   <p id="final-time-display" class="text-xs text-slate-400 -mt-2 min-h-[1rem]"></p>
@@ -1052,22 +1052,22 @@
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo</label>
         <input id="cu-nome" type="text" placeholder="Ex.: Ana Lima"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail <span style="color:#EF4444;">*</span></label>
         <input id="cu-email" type="email" required placeholder="ana@empresa.com"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Perfil de acesso <span style="color:#EF4444;">*</span></label>
         <select id="cu-role" onchange="onCuRoleChange(this)"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
           <option value="employee">Atendente — apenas busca e cadastro de clientes</option>
           <option value="admin">Admin — acesso completo + gestão de usuários</option>
         </select>
@@ -1076,8 +1076,8 @@
       <div id="cu-store-row">
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span id="cu-store-required" style="color:#EF4444;">*</span></label>
         <select id="cu-store"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
           <option value="">Carregando lojas...</option>
         </select>
         <p id="cu-store-hint" style="font-size:11px;color:#94A3B8;margin:4px 0 0;">Obrigatório para Atendente. Admins podem ficar sem loja.</p>
@@ -1089,8 +1089,8 @@
           Cancelar
         </button>
         <button type="submit" id="create-user-btn"
-          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
-          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          style="padding:10px 20px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='var(--color-primary-hover)'" onmouseout="this.style.background='var(--color-primary)'">
           <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"/>
           </svg>
@@ -1117,18 +1117,18 @@
       <p style="font-size:13px;font-weight:500;color:#374151;margin:0 0 8px;">Link de primeiro acesso:</p>
       <div style="display:flex;gap:8px;align-items:center;">
         <input id="access-link-input" type="text" readonly
-          style="flex:1;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:12px;color:#475569;outline:none;box-sizing:border-box;font-family:monospace;background:#F8FAFC;overflow:hidden;text-overflow:ellipsis;" />
+          style="flex:1;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:12px;color:#475569;outline:none;box-sizing:border-box;font-family:monospace;background:#F8FAFC;overflow:hidden;text-overflow:ellipsis;" />
         <button onclick="copyAccessLink()" id="copy-link-btn"
-          style="padding:10px 14px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;"
-          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          style="padding:10px 14px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;"
+          onmouseover="this.style.background='var(--color-primary-hover)'" onmouseout="this.style.background='var(--color-primary)'">
           Copiar
         </button>
       </div>
       <p style="font-size:11px;color:#94A3B8;margin:8px 0 0;">Envie este link ao usuário. Ele expira após o primeiro uso.</p>
       <div style="display:flex;justify-content:flex-end;margin-top:20px;">
         <button onclick="closeAccessLinkModal()"
-          style="padding:10px 24px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;"
-          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          style="padding:10px 24px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;"
+          onmouseover="this.style.background='var(--color-primary-hover)'" onmouseout="this.style.background='var(--color-primary)'">
           Fechar
         </button>
       </div>
@@ -1159,37 +1159,37 @@
         <div style="grid-column:1/-1;">
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:#EF4444;">*</span></label>
           <input id="edit-nome" type="text" required
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Telefone / WhatsApp <span style="color:#EF4444;">*</span></label>
           <input id="edit-tel" type="tel" required maxlength="15" oninput="formatPhone(this)"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">E-mail</label>
           <input id="edit-email" type="email"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Data de nascimento</label>
           <input id="edit-nasc" type="date"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">CEP</label>
           <div style="display:flex;gap:8px;">
             <input id="edit-cep" type="text" placeholder="00000-000" maxlength="9" oninput="formatCEP(this)"
-              style="flex:1;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-              onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+              style="flex:1;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+              onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
             <button type="button" onclick="buscarCEPEdit()"
               style="padding:10px 14px;border:1.5px solid #CBD5E1;border-radius:10px;font-size:13px;color:#475569;background:white;cursor:pointer;white-space:nowrap;font-family:inherit;">
               Buscar
@@ -1200,43 +1200,43 @@
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Rua / Logradouro</label>
           <input id="edit-rua" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Número</label>
           <input id="edit-num" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Complemento</label>
           <input id="edit-comp" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Bairro</label>
           <input id="edit-bairro" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Cidade</label>
           <input id="edit-cidade" type="text"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
 
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Estado (UF)</label>
           <select id="edit-estado"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
             <option value="">UF</option>
             <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option>
             <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
@@ -1250,8 +1250,8 @@
         <div style="grid-column:1/-1;">
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Observações</label>
           <textarea id="edit-obs" rows="3"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'"></textarea>
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;resize:vertical;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'"></textarea>
         </div>
 
       </div>
@@ -1262,8 +1262,8 @@
           Cancelar
         </button>
         <button type="submit" id="edit-client-btn"
-          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
-          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          style="padding:10px 20px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='var(--color-primary-hover)'" onmouseout="this.style.background='var(--color-primary)'">
           <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
@@ -1296,22 +1296,22 @@
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome <span style="color:#EF4444;">*</span></label>
         <input id="nt-nome" type="text" required placeholder="Ex.: Insulfilm G20"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Marca / Fabricante</label>
           <input id="nt-marca" type="text" placeholder="Ex.: 3M, Llumar"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
         </div>
         <div>
           <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Categoria</label>
           <select id="nt-categoria"
-            style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
-            onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+            style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+            onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
             <option value="">Selecione...</option>
             <option value="solar">Solar</option>
             <option value="premium">Premium</option>
@@ -1324,19 +1324,19 @@
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Descrição</label>
         <input id="nt-desc" type="text" placeholder="Ex.: Alta rejeição de calor, baixa reflexão"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Garantia padrão (meses)</label>
         <input id="nt-garantia" type="number" placeholder="Ex.: 24" min="1" max="120"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#374151;">
-        <input id="nt-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:#0369A1;" />
+        <input id="nt-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--color-primary);" />
         Disponível para novas instalações (Ativo)
       </label>
 
@@ -1346,8 +1346,8 @@
           Cancelar
         </button>
         <button type="submit" id="novo-tipo-btn"
-          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
-          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          style="padding:10px 20px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='var(--color-primary-hover)'" onmouseout="this.style.background='var(--color-primary)'">
           <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
           </svg>
@@ -1381,15 +1381,15 @@
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Nome completo <span style="color:#EF4444;">*</span></label>
         <input id="func-nome" type="text" required placeholder="Ex.: Carlos Oliveira"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Loja <span style="color:#EF4444;">*</span></label>
         <select id="func-loja" required
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'">
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;background:white;cursor:pointer;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'">
           <option value="" disabled selected>Selecione a loja...</option>
         </select>
       </div>
@@ -1397,8 +1397,8 @@
       <div>
         <label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px;">Data de contratação</label>
         <input id="func-data" type="date"
-          style="width:100%;padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
-          onfocus="this.style.borderColor='#0369A1'" onblur="this.style.borderColor='#E2E8F0'" />
+          style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-300);border-radius:10px;font-size:14px;color:#0F172A;outline:none;box-sizing:border-box;font-family:inherit;"
+          onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--gray-300)'" />
       </div>
 
       <div>
@@ -1418,7 +1418,7 @@
       </div>
 
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:#374151;">
-        <input id="func-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:#0369A1;" />
+        <input id="func-ativo" type="checkbox" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--color-primary);" />
         Instalador ativo (disponível para novas instalações)
       </label>
 
@@ -1428,8 +1428,8 @@
           Cancelar
         </button>
         <button type="submit" id="func-submit-btn"
-          style="padding:10px 20px;background:#0369A1;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
-          onmouseover="this.style.background='#0284C7'" onmouseout="this.style.background='#0369A1'">
+          style="padding:10px 20px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;"
+          onmouseover="this.style.background='var(--color-primary-hover)'" onmouseout="this.style.background='var(--color-primary)'">
           <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>

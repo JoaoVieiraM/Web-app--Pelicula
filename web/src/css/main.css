@@ -30,8 +30,8 @@
 }
 
 :root {
-      --primary: #0369A1;
-      --primary-hover: #0284C7;
+      --primary: var(--color-primary);
+      --primary-hover: var(--color-primary-hover);
       --sidebar-bg: var(--color-black);
     }
     * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
@@ -93,6 +93,12 @@
     /* Cards */
     .card { transition: box-shadow 200ms ease; }
     .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+    /* Tailwind focus override — substitui focus:border-blue-500 e ring azul */
+    input:focus, select:focus, textarea:focus {
+      --tw-ring-color: rgba(26, 26, 28, 0.15);
+      border-color: var(--color-primary) !important;
+    }
 
     /* Timeline connector */
     .timeline-item::before {
