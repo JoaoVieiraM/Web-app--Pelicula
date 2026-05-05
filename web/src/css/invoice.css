@@ -6,7 +6,7 @@
   font-family: 'Inter', Arial, sans-serif;
   font-size: 13px;
   line-height: 1.5;
-  color: #0F172A;
+  color: var(--gray-900);
   background: #ffffff;
   width: 794px;
   min-height: 1123px;
@@ -22,19 +22,19 @@
   align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 18px;
-  border-bottom: 3px solid #0369A1;
+  border-bottom: 3px solid var(--color-accent);
 }
 
 .invoice-brand-name {
   font-size: 24px;
   font-weight: 800;
-  color: #0369A1;
+  color: var(--color-accent);
   letter-spacing: -0.5px;
 }
 
 .invoice-brand-sub {
   font-size: 11px;
-  color: #64748B;
+  color: var(--gray-500);
   margin-top: 2px;
   font-weight: 400;
 }
@@ -42,12 +42,12 @@
 .invoice-store {
   text-align: right;
   font-size: 12px;
-  color: #475569;
+  color: var(--gray-500);
 }
 
 .invoice-store strong {
   display: block;
-  color: #0F172A;
+  color: var(--gray-900);
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 2px;
@@ -62,7 +62,7 @@
 .invoice-title h1 {
   font-size: 15px;
   font-weight: 700;
-  color: #0369A1;
+  color: var(--color-accent);
   letter-spacing: 2px;
   text-transform: uppercase;
   margin: 0 0 3px;
@@ -70,15 +70,15 @@
 
 .invoice-title .invoice-doc-number {
   font-size: 13px;
-  color: #64748B;
+  color: var(--gray-500);
 }
 
 /* ── Barra de metadados ─────────────────────── */
 .invoice-meta {
   display: flex;
   justify-content: space-around;
-  background: #F0F9FF;
-  border: 1px solid #BAE6FD;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: 8px;
   padding: 12px 16px;
   margin-bottom: 18px;
@@ -90,21 +90,21 @@
 }
 
 .invoice-meta-item:not(:last-child) {
-  border-right: 1px solid #BAE6FD;
+  border-right: 1px solid var(--gray-200);
 }
 
 .invoice-meta-label {
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #64748B;
+  color: var(--gray-500);
   font-weight: 700;
 }
 
 .invoice-meta-value {
   font-size: 14px;
   font-weight: 700;
-  color: #0369A1;
+  color: var(--gray-900);
   margin-top: 2px;
 }
 
@@ -118,16 +118,16 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #475569;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
   border-bottom: none;
   border-radius: 6px 6px 0 0;
   padding: 6px 12px;
 }
 
 .invoice-section-body {
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--gray-200);
   border-radius: 0 0 6px 6px;
   padding: 12px 14px;
   display: grid;
@@ -141,7 +141,7 @@
 
 .invoice-field-label {
   font-size: 9px;
-  color: #94A3B8;
+  color: var(--gray-500);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 700;
@@ -150,7 +150,7 @@
 
 .invoice-field-value {
   font-size: 13px;
-  color: #0F172A;
+  color: var(--gray-900);
   font-weight: 500;
 }
 
@@ -167,12 +167,12 @@
 }
 
 .invoice-part-chip {
-  background: #EFF6FF;
-  border: 1px solid #BFDBFE;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
   border-radius: 20px;
   padding: 2px 10px;
   font-size: 11px;
-  color: #1D4ED8;
+  color: var(--gray-700);
   font-weight: 500;
 }
 
@@ -228,10 +228,10 @@
 }
 
 .invoice-signature-line {
-  border-top: 1px solid #334155;
+  border-top: 1px solid var(--gray-700);
   padding-top: 8px;
   font-size: 11px;
-  color: #475569;
+  color: var(--gray-500);
 }
 
 /* ── Rodapé ─────────────────────────────────── */
@@ -242,7 +242,7 @@
   right: 48px;
   text-align: center;
   font-size: 10px;
-  color: #94A3B8;
-  border-top: 1px solid #E2E8F0;
+  color: var(--gray-500);
+  border-top: 1px solid var(--gray-200);
   padding-top: 10px;
 }

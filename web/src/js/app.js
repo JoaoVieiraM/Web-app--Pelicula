@@ -743,35 +743,35 @@
 
     // Estilos reutilizados inline (evita dependência de invoice.css no html2canvas)
     const S = {
-      page:        'font-family:Arial,sans-serif;font-size:13px;line-height:1.5;color:#0F172A;background:#fff;width:794px;padding:40px 48px;box-sizing:border-box;',
-      header:      'display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:18px;border-bottom:3px solid #0369A1;',
-      brandName:   'font-size:24px;font-weight:800;color:#0369A1;letter-spacing:-0.5px;',
-      brandSub:    'font-size:11px;color:#64748B;margin-top:2px;',
-      storeBox:    'text-align:right;font-size:12px;color:#475569;',
-      storeStrong: 'display:block;color:#0F172A;font-size:13px;font-weight:600;margin-bottom:2px;',
+      page:        'font-family:Arial,sans-serif;font-size:13px;line-height:1.5;color:#1A1A1C;background:#fff;width:794px;padding:40px 48px;box-sizing:border-box;',
+      header:      'display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:18px;border-bottom:3px solid #D62828;',
+      brandName:   'font-size:24px;font-weight:800;color:#D62828;letter-spacing:-0.5px;',
+      brandSub:    'font-size:11px;color:#71717A;margin-top:2px;',
+      storeBox:    'text-align:right;font-size:12px;color:#71717A;',
+      storeStrong: 'display:block;color:#1A1A1C;font-size:13px;font-weight:600;margin-bottom:2px;',
       titleWrap:   'text-align:center;margin-bottom:16px;',
-      titleH1:     'font-size:15px;font-weight:700;color:#0369A1;letter-spacing:2px;text-transform:uppercase;margin:0 0 3px;',
-      titleNum:    'font-size:13px;color:#64748B;',
-      meta:        'display:flex;justify-content:space-around;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:8px;padding:12px 16px;margin-bottom:18px;',
+      titleH1:     'font-size:15px;font-weight:700;color:#D62828;letter-spacing:2px;text-transform:uppercase;margin:0 0 3px;',
+      titleNum:    'font-size:13px;color:#71717A;',
+      meta:        'display:flex;justify-content:space-around;background:#FAFAFA;border:1px solid #E4E4E7;border-radius:8px;padding:12px 16px;margin-bottom:18px;',
       metaItem:    'text-align:center;flex:1;padding:0 8px;',
-      metaLabel:   'font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:#64748B;font-weight:700;',
-      metaValue:   'font-size:14px;font-weight:700;color:#0369A1;margin-top:2px;',
+      metaLabel:   'font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:#71717A;font-weight:700;',
+      metaValue:   'font-size:14px;font-weight:700;color:#1A1A1C;margin-top:2px;',
       section:     'margin-bottom:14px;',
-      secTitle:    'font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#475569;background:#F1F5F9;border:1px solid #E2E8F0;border-bottom:none;border-radius:6px 6px 0 0;padding:6px 12px;',
-      secBody:     'border:1px solid #E2E8F0;border-radius:0 0 6px 6px;padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;',
-      secBodyFull: 'border:1px solid #E2E8F0;border-radius:0 0 6px 6px;padding:12px 14px;',
-      fLabel:      'font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:2px;',
-      fValue:      'font-size:13px;color:#0F172A;font-weight:500;',
+      secTitle:    'font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#71717A;background:#F4F4F5;border:1px solid #E4E4E7;border-bottom:none;border-radius:6px 6px 0 0;padding:6px 12px;',
+      secBody:     'border:1px solid #E4E4E7;border-radius:0 0 6px 6px;padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;',
+      secBodyFull: 'border:1px solid #E4E4E7;border-radius:0 0 6px 6px;padding:12px 14px;',
+      fLabel:      'font-size:9px;color:#71717A;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:2px;',
+      fValue:      'font-size:13px;color:#1A1A1C;font-weight:500;',
       span2:       'grid-column:1/-1;',
       parts:       'display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;',
-      chip:        'background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;padding:2px 10px;font-size:11px;color:#1D4ED8;font-weight:500;',
+      chip:        'background:#F4F4F5;border:1px solid #D4D4D8;border-radius:20px;padding:2px 10px;font-size:11px;color:#3A3A3E;font-weight:500;',
       warranty:    'display:flex;align-items:center;gap:16px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:8px;padding:14px 18px;margin-bottom:14px;',
       wLabel:      'font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:#16A34A;font-weight:700;',
       wDate:       'font-size:20px;font-weight:800;color:#15803D;line-height:1.2;',
       wPeriod:     'font-size:11px;color:#166534;margin-top:1px;',
       sigs:        'display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:28px;',
-      sigLine:     'border-top:1px solid #334155;padding-top:8px;text-align:center;font-size:11px;color:#475569;',
-      footer:      'margin-top:24px;text-align:center;font-size:10px;color:#94A3B8;border-top:1px solid #E2E8F0;padding-top:10px;',
+      sigLine:     'border-top:1px solid #3A3A3E;padding-top:8px;text-align:center;font-size:11px;color:#71717A;',
+      footer:      'margin-top:24px;text-align:center;font-size:10px;color:#71717A;border-top:1px solid #E4E4E7;padding-top:10px;',
     };
 
     const el = document.createElement('div');
@@ -780,7 +780,7 @@
       <div style="${S.page}">
         <div style="${S.header}">
           <div>
-            <div style="${S.brandName}">MARKEL FILM</div>
+            <img src="src/assets/logomarkelsembg.png" alt="Markel Film" style="height:64px;width:auto;display:block;margin-bottom:4px;">
             <div style="${S.brandSub}">Películas Automotivas</div>
           </div>
           <div style="${S.storeBox}">
@@ -800,15 +800,15 @@
             <div style="${S.metaLabel}">Data</div>
             <div style="${S.metaValue}">${fmtDate(inst.installed_at)}</div>
           </div>
-          <div style="${S.metaItem}border-left:1px solid #BAE6FD;">
+          <div style="${S.metaItem}border-left:1px solid #E4E4E7;">
             <div style="${S.metaLabel}">Entrada</div>
             <div style="${S.metaValue}">${fmtTime(inst.hours_in)}</div>
           </div>
-          <div style="${S.metaItem}border-left:1px solid #BAE6FD;">
+          <div style="${S.metaItem}border-left:1px solid #E4E4E7;">
             <div style="${S.metaLabel}">Saída</div>
             <div style="${S.metaValue}">${fmtTime(inst.hours_out)}</div>
           </div>
-          <div style="${S.metaItem}border-left:1px solid #BAE6FD;">
+          <div style="${S.metaItem}border-left:1px solid #E4E4E7;">
             <div style="${S.metaLabel}">Tempo Total</div>
             <div style="${S.metaValue}">${fmtMinutes(inst.final_time)}</div>
           </div>
