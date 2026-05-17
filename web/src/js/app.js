@@ -1219,20 +1219,12 @@
     const show = el => { if (el) el.style.display = ''; };
     const hide = el => { if (el) el.style.display = 'none'; };
 
-    if (isAdmin) {
-      show(document.getElementById('nav-dashboard'));
-      show(document.getElementById('nav-tipos'));
-      show(document.getElementById('nav-instaladores'));
-      show(document.getElementById('nav-usuarios'));
-      // Botão "Editar" no perfil: visível para admin
-      const editBtn = document.querySelector('#page-perfil .btn-primary.hidden');
-      if (editBtn) editBtn.classList.remove('hidden');
-    } else {
-      hide(document.getElementById('nav-dashboard'));
-      hide(document.getElementById('nav-tipos'));
-      hide(document.getElementById('nav-instaladores'));
-      hide(document.getElementById('nav-usuarios'));
-    }
+    const adminOnly = ['nav-dashboard','nav-tipos','nav-instaladores','nav-usuarios'];
+    const empOnly   = ['nav-novo-cliente','nav-funcionarios'];
+    adminOnly.forEach(id => (isAdmin ? show : hide)(document.getElementById(id)));
+    empOnly.forEach(id   => (isAdmin ? hide : show)(document.getElementById(id)));
+    const editBtn = document.querySelector('#page-perfil .btn-primary.hidden');
+    if (editBtn && isAdmin) editBtn.classList.remove('hidden');
   }
 
   // ════════════════════════════════════════════════════════
@@ -1300,9 +1292,10 @@
   }
 
   async function openCreateUserModal() {
-    document.getElementById('cu-nome').value  = '';
-    document.getElementById('cu-email').value = '';
-    document.getElementById('cu-role').value  = 'employee';
+    document.getElementById('cu-nome').value     = '';
+    document.getElementById('cu-email').value    = '';
+    document.getElementById('cu-password').value = '';
+    document.getElementById('cu-role').value     = 'employee';
     document.getElementById('create-user-error').style.display = 'none';
 
     const sel = document.getElementById('cu-store');
@@ -1369,9 +1362,10 @@
     const errEl = document.getElementById('create-user-error');
     const spinSVG = '<svg style="width:15px;height:15px;" class="animate-spin" fill="none" viewBox="0 0 24 24"><circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>';
 
-    const email   = document.getElementById('cu-email').value.trim();
-    const role    = document.getElementById('cu-role').value;
-    const storeId = document.getElementById('cu-store').value || null;
+    const email    = document.getElementById('cu-email').value.trim();
+    const password = document.getElementById('cu-password').value;
+    const role     = document.getElementById('cu-role').value;
+    const storeId  = document.getElementById('cu-store').value || null;
 
     if (role === 'employee' && !storeId) {
       errEl.textContent   = 'Selecione a loja para o Atendente.';
@@ -1386,6 +1380,7 @@
     try {
       const result = await callEdgeFunction('create', {
         email,
+        password,
         display_name: document.getElementById('cu-nome').value.trim() || null,
         role,
         store_id: storeId,
@@ -1884,6 +1879,11 @@
       if (s.id === emp?.store_id) opt.selected = true;
       sel.appendChild(opt);
     });
+
+    if (state.role !== 'admin' && state.storeId) {
+      sel.value    = state.storeId;
+      sel.disabled = true;
+    }
 
     document.getElementById('modal-funcionario').style.display = 'flex';
     document.body.style.overflow = 'hidden';
