@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, shell, dialog } = require('electron');
+const { app, BrowserWindow, Menu, shell, dialog, ipcMain } = require('electron');
 const path = require('path');
 
 // ── Configuração ────────────────────────────────────────────────
@@ -31,11 +31,28 @@ function createWindow() {
     return { action: 'deny' };
   });
 
+  mainWindow = win;
+  win.on('closed', () => { mainWindow = null; });
   buildMenu(win);
   return win;
 }
 
 function buildMenu(win) {
+  const devItems = app.isPackaged ? [] : [
+    {
+      label: 'Forçar Recarregamento',
+      accelerator: 'Ctrl+Shift+R',
+      click: () => win.webContents.reloadIgnoringCache(),
+    },
+    { type: 'separator' },
+    {
+      label: 'Ferramentas de Desenvolvedor',
+      accelerator: 'F12',
+      click: () => win.webContents.toggleDevTools(),
+    },
+    { type: 'separator' },
+  ];
+
   const template = [
     {
       label: 'Arquivo',
@@ -55,18 +72,7 @@ function buildMenu(win) {
           accelerator: 'F5',
           click: () => win.webContents.reload(),
         },
-        {
-          label: 'Forçar Recarregamento',
-          accelerator: 'Ctrl+Shift+R',
-          click: () => win.webContents.reloadIgnoringCache(),
-        },
-        { type: 'separator' },
-        {
-          label: 'Ferramentas de Desenvolvedor',
-          accelerator: 'F12',
-          click: () => win.webContents.toggleDevTools(),
-        },
-        { type: 'separator' },
+        ...devItems,
         {
           label: 'Tela Cheia',
           accelerator: 'F11',
@@ -95,6 +101,31 @@ function buildMenu(win) {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
+
+// ── IPC: diálogos nativos para o renderer ───────────────────────
+let mainWindow = null;
+
+ipcMain.handle('dialog:alert', (_, msg) => {
+  dialog.showMessageBoxSync(mainWindow, {
+    type:    'info',
+    title:   'Markel Film',
+    message: String(msg),
+    buttons: ['OK'],
+  });
+});
+
+ipcMain.handle('dialog:confirm', (_, msg) => {
+  const result = dialog.showMessageBoxSync(mainWindow, {
+    type:      'question',
+    title:     'Markel Film',
+    message:   String(msg),
+    buttons:   ['Cancelar', 'Confirmar'],
+    defaultId: 1,
+    cancelId:  0,
+  });
+  return result === 1;
+});
+// ────────────────────────────────────────────────────────────────
 
 app.whenReady().then(() => {
   createWindow();
