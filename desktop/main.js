@@ -24,6 +24,9 @@ function createWindow() {
   });
 
   win.loadURL(APP_URL);
+  win.on('focus', () => {
+    win.webContents.focus();
+  });
 
   // Links externos (mailto, etc.) abrem no navegador padrão
   win.webContents.setWindowOpenHandler(({ url }) => {
