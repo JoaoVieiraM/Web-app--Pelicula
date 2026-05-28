@@ -1,4 +1,11 @@
-// ── Supabase client ──────────────────────
+// ── Electron: redireciona alert/confirm para diálogos nativos ───
+  if (window.electronApp?.isDesktop) {
+    window.alert   = (msg) => window.electronApp.alert(msg);
+    window.confirm = (msg) => window.electronApp.confirm(msg);
+  }
+  // ────────────────────────────────────────────────────────────────
+
+  // ── Supabase client ──────────────────────
   const SUPA_URL = 'https://bsewiosciksmlzndvnro.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzZXdpb3NjaWtzbWx6bmR2bnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU5ODYsImV4cCI6MjA5MjIxMTk4Nn0.A281sBioDuT1f9oy12e5P-JJb4DWVnGgEkS6WPrJ08w';
   const sb = supabase.createClient(SUPA_URL, SUPA_KEY, {
